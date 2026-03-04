@@ -1,0 +1,2241 @@
+---
+openapi: 3.0.1
+info:
+  title: Bizon Commerce API
+  version: v1
+  description: Multi-tenant e-commerce API with Admin and Storefront endpoints.
+paths:
+  "/api/v1/admin/categories":
+    get:
+      summary: List categories
+      tags:
+      - Admin / Categories
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: page
+        in: query
+        required: false
+        description: Page number
+        schema:
+          type: integer
+      - name: items
+        in: query
+        required: false
+        description: Items per page
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Categories list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  categories:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        slug:
+                          type: string
+                        description:
+                          type: string
+                          nullable: true
+                        position:
+                          type: integer
+                          nullable: true
+                        active:
+                          type: boolean
+                        parent_id:
+                          type: integer
+                          nullable: true
+                        children_count:
+                          type: integer
+                        products_count:
+                          type: integer
+                        created_at:
+                          type: string
+                          format: date-time
+                        updated_at:
+                          type: string
+                          format: date-time
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      per_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+        '401':
+          description: Unauthorized
+    post:
+      summary: Create category
+      tags:
+      - Admin / Categories
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: Category created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/category"
+        '401':
+          description: Unauthorized
+        '422':
+          description: Invalid parameters
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      example: Electronics
+                    description:
+                      type: string
+                    parent_id:
+                      type: integer
+                      nullable: true
+                    position:
+                      type: integer
+                    active:
+                      type: boolean
+                      default: true
+                  required:
+                  - name
+              required:
+              - category
+  "/api/v1/admin/categories/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      description: Category ID
+      schema:
+        type: integer
+    get:
+      summary: Get category
+      tags:
+      - Admin / Categories
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: Category found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/category"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+    patch:
+      summary: Update category
+      tags:
+      - Admin / Categories
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: Category updated
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/category"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '422':
+          description: Invalid parameters
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    parent_id:
+                      type: integer
+                      nullable: true
+                    position:
+                      type: integer
+                    active:
+                      type: boolean
+    delete:
+      summary: Delete category
+      tags:
+      - Admin / Categories
+      security:
+      - bearer_auth: []
+      responses:
+        '204':
+          description: Category deleted
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+  "/api/v1/admin/customers":
+    get:
+      summary: List customers
+      tags:
+      - Admin / Customers
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: page
+        in: query
+        required: false
+        description: Page number
+        schema:
+          type: integer
+      - name: items
+        in: query
+        required: false
+        description: Items per page
+        schema:
+          type: integer
+      - name: q
+        in: query
+        required: false
+        description: Search by email
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Customers list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  customers:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/customer"
+                  meta:
+                    "$ref": "#/components/schemas/pagination_meta"
+        '401':
+          description: Unauthorized
+  "/api/v1/admin/customers/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      description: Customer ID
+      schema:
+        type: integer
+    get:
+      summary: Get customer
+      tags:
+      - Admin / Customers
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: Customer found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/customer"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+  "/api/v1/admin/dashboard":
+    get:
+      summary: Get dashboard metrics
+      tags:
+      - Admin / Dashboard
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: Dashboard data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_products:
+                    type: integer
+                  total_orders:
+                    type: integer
+                  total_customers:
+                    type: integer
+                  total_revenue_cents:
+                    type: integer
+                  orders_by_status:
+                    type: object
+                  recent_orders:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        order_number:
+                          type: string
+                        email:
+                          type: string
+                        status:
+                          type: string
+                        total:
+                          type: object
+                          properties:
+                            amount:
+                              type: number
+                            currency:
+                              type: string
+                        items_count:
+                          type: integer
+                        customer_name:
+                          type: string
+                          nullable: true
+                        created_at:
+                          type: string
+                          format: date-time
+        '401':
+          description: Unauthorized
+  "/api/v1/admin/orders":
+    get:
+      summary: List orders
+      tags:
+      - Admin / Orders
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: page
+        in: query
+        required: false
+        description: Page number
+        schema:
+          type: integer
+      - name: items
+        in: query
+        required: false
+        description: Items per page
+        schema:
+          type: integer
+      - name: status
+        in: query
+        required: false
+        enum:
+        - pending
+        - confirmed
+        - paid
+        - processing
+        - shipped
+        - delivered
+        - cancelled
+        - refunded
+        description: "Filter by status:\n * `pending` \n * `confirmed` \n * `paid`
+          \n * `processing` \n * `shipped` \n * `delivered` \n * `cancelled` \n *
+          `refunded` \n "
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Orders list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  orders:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/order_list"
+                  meta:
+                    "$ref": "#/components/schemas/pagination_meta"
+        '401':
+          description: Unauthorized
+  "/api/v1/admin/orders/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      description: Order ID
+      schema:
+        type: integer
+    get:
+      summary: Get order
+      tags:
+      - Admin / Orders
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: Order found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/order"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+    patch:
+      summary: Update order status
+      tags:
+      - Admin / Orders
+      description: 'Trigger a state transition event on the order. Valid events: confirm,
+        pay, process_order, ship, deliver, cancel, refund.'
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: Order status updated
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/order"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '422':
+          description: Invalid transition
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event:
+                  type: string
+                  enum:
+                  - confirm
+                  - pay
+                  - process_order
+                  - ship
+                  - deliver
+                  - cancel
+                  - refund
+                  description: State transition event to trigger
+              required:
+              - event
+  "/api/v1/admin/products/{product_id}/images":
+    parameters:
+    - name: product_id
+      in: path
+      required: true
+      description: Product ID
+      schema:
+        type: integer
+    get:
+      summary: List product images
+      tags:
+      - Admin / Product Images
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: Images list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  images:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/product_image"
+        '401':
+          description: Unauthorized
+    post:
+      summary: Upload product image
+      tags:
+      - Admin / Product Images
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: Image uploaded
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/product_image"
+        '401':
+          description: Unauthorized
+        '422':
+          description: Invalid file
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: file
+        required: true
+        description: Image file
+  "/api/v1/admin/products/{product_id}/images/{id}":
+    parameters:
+    - name: product_id
+      in: path
+      required: true
+      description: Product ID
+      schema:
+        type: integer
+    - name: id
+      in: path
+      required: true
+      description: Image ID
+      schema:
+        type: integer
+    patch:
+      summary: Update image metadata
+      tags:
+      - Admin / Product Images
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: Image updated
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/product_image"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                position:
+                  type: integer
+                alt_text:
+                  type: string
+    delete:
+      summary: Delete image
+      tags:
+      - Admin / Product Images
+      security:
+      - bearer_auth: []
+      responses:
+        '204':
+          description: Image deleted
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+  "/api/v1/admin/products":
+    get:
+      summary: List products
+      tags:
+      - Admin / Products
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: page
+        in: query
+        required: false
+        description: Page number
+        schema:
+          type: integer
+      - name: items
+        in: query
+        required: false
+        description: Items per page
+        schema:
+          type: integer
+      - name: status
+        in: query
+        required: false
+        enum:
+        - draft
+        - active
+        - archived
+        description: "Filter by status:\n * `draft` \n * `active` \n * `archived`
+          \n "
+        schema:
+          type: string
+      - name: category_id
+        in: query
+        required: false
+        description: Filter by category
+        schema:
+          type: integer
+      - name: q
+        in: query
+        required: false
+        description: Search by name
+        schema:
+          type: string
+      - name: featured
+        in: query
+        required: false
+        description: Filter featured products
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: Products list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  products:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/product_list"
+                  meta:
+                    "$ref": "#/components/schemas/pagination_meta"
+        '401':
+          description: Unauthorized
+    post:
+      summary: Create product
+      tags:
+      - Admin / Products
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: Product created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/product"
+        '401':
+          description: Unauthorized
+        '422':
+          description: Invalid parameters
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                product:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      example: Premium T-Shirt
+                    description:
+                      type: string
+                    short_description:
+                      type: string
+                    category_id:
+                      type: integer
+                    base_price_cents:
+                      type: integer
+                      example: 2999
+                    base_price_currency:
+                      type: string
+                      example: USD
+                    compare_at_price_cents:
+                      type: integer
+                      nullable: true
+                    compare_at_price_currency:
+                      type: string
+                    sku:
+                      type: string
+                      example: TSH-001
+                    barcode:
+                      type: string
+                    track_inventory:
+                      type: boolean
+                      default: true
+                    quantity:
+                      type: integer
+                      default: 0
+                    status:
+                      type: string
+                      enum:
+                      - draft
+                      - active
+                      - archived
+                      default: draft
+                    featured:
+                      type: boolean
+                      default: false
+                    position:
+                      type: integer
+                    published_at:
+                      type: string
+                      format: date-time
+                      nullable: true
+                    custom_attributes:
+                      type: object
+                  required:
+                  - name
+                  - base_price_cents
+              required:
+              - product
+  "/api/v1/admin/products/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      description: Product ID
+      schema:
+        type: integer
+    get:
+      summary: Get product
+      tags:
+      - Admin / Products
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: Product found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/product"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+    patch:
+      summary: Update product
+      tags:
+      - Admin / Products
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: Product updated
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/product"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '422':
+          description: Invalid parameters
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                product:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    short_description:
+                      type: string
+                    category_id:
+                      type: integer
+                    base_price_cents:
+                      type: integer
+                    base_price_currency:
+                      type: string
+                    compare_at_price_cents:
+                      type: integer
+                      nullable: true
+                    compare_at_price_currency:
+                      type: string
+                    sku:
+                      type: string
+                    barcode:
+                      type: string
+                    track_inventory:
+                      type: boolean
+                    quantity:
+                      type: integer
+                    status:
+                      type: string
+                      enum:
+                      - draft
+                      - active
+                      - archived
+                    featured:
+                      type: boolean
+                    position:
+                      type: integer
+                    published_at:
+                      type: string
+                      format: date-time
+                      nullable: true
+                    custom_attributes:
+                      type: object
+    delete:
+      summary: Delete product
+      tags:
+      - Admin / Products
+      security:
+      - bearer_auth: []
+      responses:
+        '204':
+          description: Product deleted
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+  "/api/v1/admin/auth/sign_in":
+    post:
+      summary: Sign in
+      tags:
+      - Admin / Auth
+      parameters: []
+      responses:
+        '200':
+          description: Signed in successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      email:
+                        type: string
+                      first_name:
+                        type: string
+                      last_name:
+                        type: string
+                      role:
+                        type: string
+                        enum:
+                        - staff
+                        - admin
+                        - owner
+                      full_name:
+                        type: string
+                      created_at:
+                        type: string
+                        format: date-time
+                      updated_at:
+                        type: string
+                        format: date-time
+                  message:
+                    type: string
+        '401':
+          description: Invalid credentials
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                      example: admin@example.com
+                    password:
+                      type: string
+                      example: password123
+                  required:
+                  - email
+                  - password
+              required:
+              - user
+  "/api/v1/admin/auth/sign_out":
+    delete:
+      summary: Sign out
+      tags:
+      - Admin / Auth
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: Signed out successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '401':
+          description: Already logged out
+  "/api/v1/admin/store":
+    get:
+      summary: Get store details
+      tags:
+      - Admin / Store
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: Store found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  slug:
+                    type: string
+                  custom_domain:
+                    type: string
+                    nullable: true
+                  subdomain:
+                    type: string
+                    nullable: true
+                  description:
+                    type: string
+                    nullable: true
+                  currency:
+                    type: string
+                  locale:
+                    type: string
+                  settings:
+                    type: object
+                  active:
+                    type: boolean
+                  created_at:
+                    type: string
+                    format: date-time
+                  updated_at:
+                    type: string
+                    format: date-time
+        '401':
+          description: Unauthorized
+    patch:
+      summary: Update store
+      tags:
+      - Admin / Store
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: Store updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  slug:
+                    type: string
+                  custom_domain:
+                    type: string
+                    nullable: true
+                  subdomain:
+                    type: string
+                    nullable: true
+                  description:
+                    type: string
+                    nullable: true
+                  currency:
+                    type: string
+                  locale:
+                    type: string
+                  settings:
+                    type: object
+                  active:
+                    type: boolean
+                  created_at:
+                    type: string
+                    format: date-time
+                  updated_at:
+                    type: string
+                    format: date-time
+        '401':
+          description: Unauthorized
+        '422':
+          description: Invalid parameters
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                store:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    custom_domain:
+                      type: string
+                    subdomain:
+                      type: string
+                    currency:
+                      type: string
+                      example: USD
+                    locale:
+                      type: string
+                      example: en
+                    active:
+                      type: boolean
+                    settings:
+                      type: object
+  "/api/v1/admin/products/{product_id}/variants":
+    parameters:
+    - name: product_id
+      in: path
+      required: true
+      description: Product ID
+      schema:
+        type: integer
+    get:
+      summary: List variants
+      tags:
+      - Admin / Variants
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: Variants list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  variants:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/variant"
+        '401':
+          description: Unauthorized
+    post:
+      summary: Create variant
+      tags:
+      - Admin / Variants
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: Variant created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/variant"
+        '401':
+          description: Unauthorized
+        '422':
+          description: Invalid parameters
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                variant:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      example: Large / Blue
+                    sku:
+                      type: string
+                      example: TSH-001-LG-BL
+                    price_cents:
+                      type: integer
+                      example: 3499
+                    price_currency:
+                      type: string
+                      example: USD
+                    compare_at_price_cents:
+                      type: integer
+                      nullable: true
+                    compare_at_price_currency:
+                      type: string
+                    track_inventory:
+                      type: boolean
+                      default: true
+                    quantity:
+                      type: integer
+                      default: 0
+                    position:
+                      type: integer
+                    active:
+                      type: boolean
+                      default: true
+                    options:
+                      type: object
+                      example:
+                        size: L
+                        color: Blue
+                  required:
+                  - name
+                  - price_cents
+              required:
+              - variant
+  "/api/v1/admin/products/{product_id}/variants/{id}":
+    parameters:
+    - name: product_id
+      in: path
+      required: true
+      description: Product ID
+      schema:
+        type: integer
+    - name: id
+      in: path
+      required: true
+      description: Variant ID
+      schema:
+        type: integer
+    get:
+      summary: Get variant
+      tags:
+      - Admin / Variants
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: Variant found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/variant"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+    patch:
+      summary: Update variant
+      tags:
+      - Admin / Variants
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: Variant updated
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/variant"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '422':
+          description: Invalid parameters
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                variant:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    sku:
+                      type: string
+                    price_cents:
+                      type: integer
+                    price_currency:
+                      type: string
+                    compare_at_price_cents:
+                      type: integer
+                      nullable: true
+                    compare_at_price_currency:
+                      type: string
+                    track_inventory:
+                      type: boolean
+                    quantity:
+                      type: integer
+                    position:
+                      type: integer
+                    active:
+                      type: boolean
+                    options:
+                      type: object
+    delete:
+      summary: Delete variant
+      tags:
+      - Admin / Variants
+      security:
+      - bearer_auth: []
+      responses:
+        '204':
+          description: Variant deleted
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+  "/api/v1/storefront/cart":
+    get:
+      summary: Get cart
+      tags:
+      - Storefront / Cart
+      description: Returns the current cart. Creates a new one if no cart token is
+        provided. The response includes the X-Cart-Token header.
+      security:
+      - store_domain: []
+        cart_token: []
+      responses:
+        '200':
+          description: Cart retrieved
+          headers:
+            X-Cart-Token:
+              schema:
+                type: string
+              description: Cart token for subsequent requests
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/cart"
+  "/api/v1/storefront/cart/add_item":
+    post:
+      summary: Add item to cart
+      tags:
+      - Storefront / Cart
+      security:
+      - store_domain: []
+        cart_token: []
+      parameters: []
+      responses:
+        '200':
+          description: Item added
+          headers:
+            X-Cart-Token:
+              schema:
+                type: string
+              description: Cart token
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/cart"
+        '422':
+          description: Invalid parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                product_id:
+                  type: integer
+                variant_id:
+                  type: integer
+                  nullable: true
+                  description: Required if product has variants
+                quantity:
+                  type: integer
+                  default: 1
+                  minimum: 1
+              required:
+              - product_id
+  "/api/v1/storefront/cart/update_item":
+    patch:
+      summary: Update cart item quantity
+      tags:
+      - Storefront / Cart
+      security:
+      - store_domain: []
+        cart_token: []
+      parameters: []
+      responses:
+        '200':
+          description: Item updated
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/cart"
+        '422':
+          description: Invalid parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cart_item_id:
+                  type: integer
+                quantity:
+                  type: integer
+                  minimum: 1
+              required:
+              - cart_item_id
+              - quantity
+  "/api/v1/storefront/cart/remove_item":
+    delete:
+      summary: Remove item from cart
+      tags:
+      - Storefront / Cart
+      security:
+      - store_domain: []
+        cart_token: []
+      parameters: []
+      responses:
+        '200':
+          description: Item removed
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/cart"
+        '422':
+          description: Invalid parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cart_item_id:
+                  type: integer
+              required:
+              - cart_item_id
+  "/api/v1/storefront/cart/clear":
+    delete:
+      summary: Clear cart
+      tags:
+      - Storefront / Cart
+      security:
+      - store_domain: []
+        cart_token: []
+      responses:
+        '200':
+          description: Cart cleared
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/cart"
+  "/api/v1/storefront/categories":
+    get:
+      summary: List categories
+      tags:
+      - Storefront / Categories
+      security:
+      - store_domain: []
+      responses:
+        '200':
+          description: Categories list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  categories:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/category"
+  "/api/v1/storefront/categories/{slug}":
+    parameters:
+    - name: slug
+      in: path
+      required: true
+      description: Category slug
+      schema:
+        type: string
+    get:
+      summary: Get category with products
+      tags:
+      - Storefront / Categories
+      security:
+      - store_domain: []
+      parameters:
+      - name: page
+        in: query
+        required: false
+        description: Page number
+        schema:
+          type: integer
+      - name: items
+        in: query
+        required: false
+        description: Items per page
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Category with products
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  category:
+                    "$ref": "#/components/schemas/category"
+                  products:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/product_list"
+                  meta:
+                    "$ref": "#/components/schemas/pagination_meta"
+        '404':
+          description: Not found
+  "/api/v1/storefront/customers":
+    post:
+      summary: Register customer
+      tags:
+      - Storefront / Customers
+      security:
+      - store_domain: []
+      parameters: []
+      responses:
+        '201':
+          description: Customer registered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  customer:
+                    "$ref": "#/components/schemas/customer"
+                  token:
+                    type: string
+                    description: JWT token valid for 24 hours. Send as X-Customer-Token
+                      header.
+        '422':
+          description: Validation errors
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                customer:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                      example: customer@example.com
+                    first_name:
+                      type: string
+                      example: John
+                    last_name:
+                      type: string
+                      example: Doe
+                    phone:
+                      type: string
+                      example: "+1234567890"
+                    password:
+                      type: string
+                      example: password123
+                      minimum: 6
+                    password_confirmation:
+                      type: string
+                      example: password123
+                  required:
+                  - email
+                  - password
+                  - password_confirmation
+              required:
+              - customer
+  "/api/v1/storefront/orders":
+    post:
+      summary: Create order (checkout)
+      tags:
+      - Storefront / Orders
+      description: Creates an order from the current cart. Requires a valid cart token
+        with items.
+      security:
+      - store_domain: []
+        cart_token: []
+        customer_token: []
+      parameters: []
+      responses:
+        '201':
+          description: Order created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/order"
+        '422':
+          description: Invalid parameters or empty cart
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: customer@example.com
+                  description: Required if not logged in
+                shipping_address:
+                  type: object
+                  properties:
+                    first_name:
+                      type: string
+                    last_name:
+                      type: string
+                    address1:
+                      type: string
+                    address2:
+                      type: string
+                    city:
+                      type: string
+                    state:
+                      type: string
+                    zip:
+                      type: string
+                    country:
+                      type: string
+                    phone:
+                      type: string
+                billing_address:
+                  type: object
+                  properties:
+                    first_name:
+                      type: string
+                    last_name:
+                      type: string
+                    address1:
+                      type: string
+                    address2:
+                      type: string
+                    city:
+                      type: string
+                    state:
+                      type: string
+                    zip:
+                      type: string
+                    country:
+                      type: string
+                    phone:
+                      type: string
+                notes:
+                  type: string
+                  nullable: true
+              required:
+              - email
+              - shipping_address
+  "/api/v1/storefront/orders/{order_number}":
+    parameters:
+    - name: order_number
+      in: path
+      required: true
+      description: 'Order number (e.g., #1001)'
+      example: "#1001"
+      schema:
+        type: string
+    get:
+      summary: Get order
+      tags:
+      - Storefront / Orders
+      security:
+      - store_domain: []
+      responses:
+        '200':
+          description: Order found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/order"
+        '404':
+          description: Not found
+  "/api/v1/storefront/products":
+    get:
+      summary: List products
+      tags:
+      - Storefront / Products
+      security:
+      - store_domain: []
+      parameters:
+      - name: page
+        in: query
+        required: false
+        description: Page number
+        schema:
+          type: integer
+      - name: items
+        in: query
+        required: false
+        description: Items per page
+        schema:
+          type: integer
+      - name: category_id
+        in: query
+        required: false
+        description: Filter by category
+        schema:
+          type: integer
+      - name: q
+        in: query
+        required: false
+        description: Search by name
+        schema:
+          type: string
+      - name: featured
+        in: query
+        required: false
+        description: Filter featured products
+        schema:
+          type: boolean
+      - name: in_stock
+        in: query
+        required: false
+        description: Filter in-stock products
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: Products list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  products:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/product_list"
+                  meta:
+                    "$ref": "#/components/schemas/pagination_meta"
+  "/api/v1/storefront/products/{slug}":
+    parameters:
+    - name: slug
+      in: path
+      required: true
+      description: Product slug
+      schema:
+        type: string
+    get:
+      summary: Get product
+      tags:
+      - Storefront / Products
+      security:
+      - store_domain: []
+      responses:
+        '200':
+          description: Product found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/product"
+        '404':
+          description: Not found
+  "/api/v1/storefront/session":
+    post:
+      summary: Customer login
+      tags:
+      - Storefront / Sessions
+      security:
+      - store_domain: []
+      parameters: []
+      responses:
+        '200':
+          description: Logged in successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  customer:
+                    "$ref": "#/components/schemas/customer"
+                  token:
+                    type: string
+                    description: JWT token valid for 24 hours. Send as X-Customer-Token
+                      header.
+        '401':
+          description: Invalid email or password
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: customer@example.com
+                password:
+                  type: string
+                  example: password123
+              required:
+              - email
+              - password
+servers:
+- url: http://localhost:3000
+  description: Development
+components:
+  securitySchemes:
+    bearer_auth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Admin JWT token (obtained via POST /api/v1/admin/auth/sign_in)
+    store_domain:
+      type: apiKey
+      in: header
+      name: X-Store-Domain
+      description: Store domain or subdomain for tenant resolution (Storefront)
+    cart_token:
+      type: apiKey
+      in: header
+      name: X-Cart-Token
+      description: Cart token for cart identification
+    customer_token:
+      type: apiKey
+      in: header
+      name: X-Customer-Token
+      description: Customer JWT token (obtained via POST /api/v1/storefront/session)
+  schemas:
+    money:
+      type: object
+      properties:
+        amount:
+          type: number
+          example: 29.99
+        currency:
+          type: string
+          example: USD
+    pagination_meta:
+      type: object
+      properties:
+        current_page:
+          type: integer
+        per_page:
+          type: integer
+        total_pages:
+          type: integer
+        total_count:
+          type: integer
+    category:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+          nullable: true
+        position:
+          type: integer
+          nullable: true
+        active:
+          type: boolean
+        parent_id:
+          type: integer
+          nullable: true
+        children_count:
+          type: integer
+        products_count:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    variant:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        sku:
+          type: string
+          nullable: true
+        track_inventory:
+          type: boolean
+        quantity:
+          type: integer
+        options:
+          type: object
+        position:
+          type: integer
+          nullable: true
+        active:
+          type: boolean
+        price:
+          "$ref": "#/components/schemas/money"
+        compare_at_price:
+          "$ref": "#/components/schemas/money"
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    product_image:
+      type: object
+      properties:
+        id:
+          type: integer
+        position:
+          type: integer
+          nullable: true
+        alt_text:
+          type: string
+          nullable: true
+        url:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    product:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+          nullable: true
+        short_description:
+          type: string
+          nullable: true
+        sku:
+          type: string
+          nullable: true
+        barcode:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum:
+          - draft
+          - active
+          - archived
+        featured:
+          type: boolean
+        custom_attributes:
+          type: object
+          nullable: true
+        quantity:
+          type: integer
+        track_inventory:
+          type: boolean
+        position:
+          type: integer
+          nullable: true
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+        base_price:
+          "$ref": "#/components/schemas/money"
+        compare_at_price:
+          "$ref": "#/components/schemas/money"
+          nullable: true
+        category:
+          type: object
+          nullable: true
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            slug:
+              type: string
+            position:
+              type: integer
+              nullable: true
+            active:
+              type: boolean
+            parent_id:
+              type: integer
+              nullable: true
+        variants:
+          type: array
+          items:
+            "$ref": "#/components/schemas/variant"
+        images:
+          type: array
+          items:
+            "$ref": "#/components/schemas/product_image"
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    product_list:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        slug:
+          type: string
+        short_description:
+          type: string
+          nullable: true
+        sku:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum:
+          - draft
+          - active
+          - archived
+        featured:
+          type: boolean
+        quantity:
+          type: integer
+        track_inventory:
+          type: boolean
+        position:
+          type: integer
+          nullable: true
+        base_price:
+          "$ref": "#/components/schemas/money"
+        compare_at_price:
+          "$ref": "#/components/schemas/money"
+          nullable: true
+        category_name:
+          type: string
+          nullable: true
+        variants_count:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+    customer:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        first_name:
+          type: string
+          nullable: true
+        last_name:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        accepts_marketing:
+          type: boolean
+        metadata:
+          type: object
+          nullable: true
+        orders_count:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    cart_item:
+      type: object
+      properties:
+        id:
+          type: integer
+        quantity:
+          type: integer
+        unit_price:
+          "$ref": "#/components/schemas/money"
+        total:
+          "$ref": "#/components/schemas/money"
+        product:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            slug:
+              type: string
+        variant:
+          type: object
+          nullable: true
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    cart:
+      type: object
+      properties:
+        id:
+          type: integer
+        token:
+          type: string
+        status:
+          type: string
+        metadata:
+          type: object
+          nullable: true
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+        total:
+          "$ref": "#/components/schemas/money"
+        items_count:
+          type: integer
+        items:
+          type: array
+          items:
+            "$ref": "#/components/schemas/cart_item"
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    order_item:
+      type: object
+      properties:
+        id:
+          type: integer
+        product_id:
+          type: integer
+        product_variant_id:
+          type: integer
+          nullable: true
+        product_name:
+          type: string
+        variant_name:
+          type: string
+          nullable: true
+        sku:
+          type: string
+          nullable: true
+        quantity:
+          type: integer
+        unit_price:
+          "$ref": "#/components/schemas/money"
+        total:
+          "$ref": "#/components/schemas/money"
+    order:
+      type: object
+      properties:
+        id:
+          type: integer
+        order_number:
+          type: string
+          example: "#1001"
+        email:
+          type: string
+        status:
+          type: string
+          enum:
+          - pending
+          - confirmed
+          - paid
+          - processing
+          - shipped
+          - delivered
+          - cancelled
+          - refunded
+        shipping_address:
+          type: object
+        billing_address:
+          type: object
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        metadata:
+          type: object
+          nullable: true
+        subtotal:
+          "$ref": "#/components/schemas/money"
+        tax:
+          "$ref": "#/components/schemas/money"
+        total:
+          "$ref": "#/components/schemas/money"
+        customer:
+          type: object
+          nullable: true
+          properties:
+            id:
+              type: integer
+            email:
+              type: string
+            first_name:
+              type: string
+            last_name:
+              type: string
+        items:
+          type: array
+          items:
+            "$ref": "#/components/schemas/order_item"
+        placed_at:
+          type: string
+          format: date-time
+          nullable: true
+        paid_at:
+          type: string
+          format: date-time
+          nullable: true
+        shipped_at:
+          type: string
+          format: date-time
+          nullable: true
+        delivered_at:
+          type: string
+          format: date-time
+          nullable: true
+        cancelled_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    order_list:
+      type: object
+      properties:
+        id:
+          type: integer
+        order_number:
+          type: string
+        email:
+          type: string
+        status:
+          type: string
+        total:
+          "$ref": "#/components/schemas/money"
+        items_count:
+          type: integer
+        customer_name:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+tags:
+- name: Admin / Auth
+  description: Admin authentication (sign in / sign out)
+- name: Admin / Store
+  description: Store configuration
+- name: Admin / Dashboard
+  description: Dashboard metrics
+- name: Admin / Categories
+  description: Category management
+- name: Admin / Products
+  description: Product management
+- name: Admin / Variants
+  description: Product variant management
+- name: Admin / Product Images
+  description: Product image management
+- name: Admin / Orders
+  description: Order management
+- name: Admin / Customers
+  description: Customer management
+- name: Storefront / Products
+  description: Browse products
+- name: Storefront / Categories
+  description: Browse categories
+- name: Storefront / Cart
+  description: Shopping cart operations
+- name: Storefront / Orders
+  description: Checkout and order lookup
+- name: Storefront / Sessions
+  description: Customer login
+- name: Storefront / Customers
+  description: Customer registration
