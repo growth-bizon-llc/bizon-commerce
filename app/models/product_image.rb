@@ -13,7 +13,11 @@ class ProductImage < ApplicationRecord
   def image_url
     return nil unless image.attached?
 
-    Rails.application.routes.url_helpers.rails_blob_url(image, only_path: true)
+    Rails.application.routes.url_helpers.rails_blob_url(
+      image,
+      host: ENV.fetch('APP_HOST', 'localhost'),
+      port: ENV.fetch('APP_PORT', 3000)
+    )
   end
 
   private

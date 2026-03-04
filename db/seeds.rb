@@ -1,9 +1,130 @@
 # frozen_string_literal: true
 
+require 'open-uri'
+
 puts "=" * 60
 puts "  Seeding Samdalth Gold - Joyería Premium"
 puts "=" * 60
 puts ""
+
+# =============================================================================
+# IMAGE URLs (Unsplash - free to use)
+# =============================================================================
+JEWELRY_IMAGES = {
+  rings: [
+    "https://images.unsplash.com/photo-1512163143273-bde0e3cc7407?w=800&q=80",
+    "https://images.unsplash.com/photo-1559006864-38a01f201f95?w=800&q=80",
+    "https://images.unsplash.com/photo-1518370265276-f22b706aeac8?w=800&q=80",
+    "https://images.unsplash.com/photo-1588814096146-e7c56156f9f8?w=800&q=80",
+    "https://images.unsplash.com/photo-1579555973297-560c43ca7562?w=800&q=80",
+    "https://images.unsplash.com/photo-1499899833954-5ecd9439d17f?w=800&q=80",
+    "https://images.unsplash.com/photo-1758995116142-c626a962a682?w=800&q=80",
+    "https://images.unsplash.com/photo-1720189031165-b6f3cf3ff940?w=800&q=80",
+    "https://images.unsplash.com/photo-1742240439165-60790db1ee93?w=800&q=80",
+    "https://images.unsplash.com/photo-1768569446356-07e653761aad?w=800&q=80",
+    "https://images.unsplash.com/photo-1628926379972-9843ad139a8c?w=800&q=80",
+    "https://images.unsplash.com/photo-1758362197676-228703a17e69?w=800&q=80"
+  ],
+  earrings: [
+    "https://images.unsplash.com/photo-1758995115555-766abbd9a491?w=800&q=80",
+    "https://images.unsplash.com/photo-1638854254875-a2416fe0fec2?w=800&q=80",
+    "https://images.unsplash.com/photo-1771173652661-8245a9d94095?w=800&q=80",
+    "https://images.unsplash.com/photo-1761479267937-4c5c7a903760?w=800&q=80",
+    "https://images.unsplash.com/photo-1765560172744-dcc030763771?w=800&q=80",
+    "https://images.unsplash.com/photo-1611271525579-9402f4d6a7e5?w=800&q=80",
+    "https://images.unsplash.com/photo-1769078595478-5f756986b818?w=800&q=80",
+    "https://images.unsplash.com/photo-1602722872368-0cfc00f748ff?w=800&q=80",
+    "https://images.unsplash.com/photo-1601511421129-f7e2f065a9d8?w=800&q=80",
+    "https://images.unsplash.com/photo-1616121341778-0dd435d03d23?w=800&q=80"
+  ],
+  bracelets: [
+    "https://images.unsplash.com/photo-1767921777873-81818b812a4d?w=800&q=80",
+    "https://images.unsplash.com/photo-1708220041029-e2dbe9089eb4?w=800&q=80",
+    "https://images.unsplash.com/photo-1708220040823-7171b8369b38?w=800&q=80",
+    "https://images.unsplash.com/photo-1758995116383-f51775896add?w=800&q=80",
+    "https://images.unsplash.com/photo-1610223515196-65f21bc2347e?w=800&q=80",
+    "https://images.unsplash.com/photo-1607269254302-b9e0c3343248?w=800&q=80",
+    "https://images.unsplash.com/photo-1618713041735-adb0de8316ea?w=800&q=80",
+    "https://images.unsplash.com/photo-1625792508300-0e1f913a3a50?w=800&q=80"
+  ],
+  necklaces: [
+    "https://images.unsplash.com/photo-1769857879388-df93b4c96bca?w=800&q=80",
+    "https://images.unsplash.com/photo-1682629846138-7db022565bd5?w=800&q=80",
+    "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=80",
+    "https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=800&q=80",
+    "https://images.unsplash.com/photo-1611107683227-e9060eccd846?w=800&q=80",
+    "https://images.unsplash.com/photo-1769909953707-31840816c5b3?w=800&q=80",
+    "https://images.unsplash.com/photo-1758995115518-26f90aa61b97?w=800&q=80",
+    "https://images.unsplash.com/photo-1755151606128-7ca2f97e46ae?w=800&q=80"
+  ],
+  chains: [
+    "https://images.unsplash.com/photo-1662434923031-b9bf1b6c10e2?w=800&q=80",
+    "https://images.unsplash.com/photo-1598009632415-1b42a2c686b6?w=800&q=80",
+    "https://images.unsplash.com/photo-1771734065116-61e16b353ded?w=800&q=80",
+    "https://images.unsplash.com/photo-1761049293052-47731d0a304f?w=800&q=80",
+    "https://images.unsplash.com/photo-1771515411694-57fb626159d1?w=800&q=80"
+  ],
+  gems: [
+    "https://images.unsplash.com/photo-1583937443351-f2f669fbe2cf?w=800&q=80",
+    "https://images.unsplash.com/photo-1653405507161-da7d205d86f4?w=800&q=80",
+    "https://images.unsplash.com/photo-1767131545090-e13ae86c8e13?w=800&q=80",
+    "https://images.unsplash.com/photo-1677777677068-9f3051ec5c79?w=800&q=80",
+    "https://images.unsplash.com/photo-1772047678328-fe7c51433288?w=800&q=80"
+  ],
+  sets: [
+    "https://images.unsplash.com/photo-1691370298583-4364b396e1e3?w=800&q=80",
+    "https://images.unsplash.com/photo-1682823544433-aae34df4e3da?w=800&q=80",
+    "https://images.unsplash.com/photo-1769116416517-594639a769a7?w=800&q=80",
+    "https://images.unsplash.com/photo-1767096612165-b5a33caa48a5?w=800&q=80"
+  ]
+}.freeze
+
+def image_category_for(category_name)
+  case category_name
+  when /Anillo|Alianza|Sello/ then :rings
+  when /Stud|Arete|Argolla|Ear Cuff/ then :earrings
+  when /Pulsera|Brazalete|Manilla/ then :bracelets
+  when /Collar|Colgante|Gargantilla/ then :necklaces
+  when /Cadena/ then :chains
+  when /Diamante|Esmeralda|Rubí|Zafiro|Amatista|Piedra/ then :gems
+  when /Set/ then :sets
+  else :necklaces
+  end
+end
+
+def attach_image_to_product(product, store, image_url, position: 0)
+  return if product.product_images.where(position: position).exists?
+
+  retries = 0
+  begin
+    downloaded = URI.parse(image_url).open(
+      'User-Agent' => 'Mozilla/5.0 (seed script)',
+      read_timeout: 15,
+      open_timeout: 10
+    )
+
+    product_image = product.product_images.build(
+      store: store,
+      alt_text: product.name,
+      position: position
+    )
+    product_image.image.attach(
+      io: downloaded,
+      filename: "#{product.slug}-#{position}.jpg",
+      content_type: 'image/jpeg'
+    )
+    product_image.save!
+    true
+  rescue StandardError => e
+    retries += 1
+    if retries <= 2
+      sleep 1
+      retry
+    end
+    puts "    [WARN] Could not download image for #{product.name}: #{e.message}"
+    false
+  end
+end
 
 # =============================================================================
 # STORE
@@ -767,6 +888,36 @@ active_products = products.select { |p| p.status == 'active' }
 variant_count = ProductVariant.where(store: store).count
 puts "  Products: #{products.count} created (#{active_products.count} active, #{products.count - active_products.count} draft/archived)"
 puts "  Variants: #{variant_count} created"
+
+# =============================================================================
+# PRODUCT IMAGES (downloaded from Unsplash)
+# =============================================================================
+puts "  Downloading product images from Unsplash..."
+image_success = 0
+image_fail = 0
+
+products.each_with_index do |product, idx|
+  next if product.product_images.any? # Skip if already has images
+
+  cat_type = image_category_for(product.category&.name || '')
+  urls = JEWELRY_IMAGES[cat_type] || JEWELRY_IMAGES[:necklaces]
+
+  # Give each product 1-2 images from its category pool
+  image_count = [1, 2].sample
+  image_count.times do |img_idx|
+    url = urls[(idx + img_idx) % urls.size]
+    if attach_image_to_product(product, store, url, position: img_idx)
+      image_success += 1
+    else
+      image_fail += 1
+    end
+  end
+
+  # Progress indicator
+  print "\r    #{idx + 1}/#{products.count} products processed (#{image_success} images attached)"
+end
+puts ""
+puts "  Images: #{image_success} attached, #{image_fail} failed"
 
 # =============================================================================
 # CUSTOMERS (20)
