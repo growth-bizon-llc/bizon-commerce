@@ -11,13 +11,14 @@ module Api
         end
 
         def create
+          image = @product.product_images.new(image_params)
+          image.store = Current.store
+          authorize image, policy_class: ProductImagePolicy
+
           unless params[:image].is_a?(ActionDispatch::Http::UploadedFile)
             return render json: { error: "Image file is required" }, status: :unprocessable_entity
           end
 
-          image = @product.product_images.new(image_params)
-          image.store = Current.store
-          authorize image, policy_class: ProductImagePolicy
           image.image.attach(params[:image])
           image.save!
           render json: ProductImageSerializer.new(image).to_h, status: :created

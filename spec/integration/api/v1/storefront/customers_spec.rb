@@ -1,6 +1,9 @@
 require 'swagger_helper'
 
 RSpec.describe 'Storefront Customers', type: :request do
+  # store, X-Store-Domain, and Current.store are provided by the
+  # 'storefront_store_domain' shared context in swagger_helper.rb.
+
   path '/api/v1/storefront/customers' do
     post 'Register customer' do
       tags 'Storefront / Customers'
@@ -28,6 +31,17 @@ RSpec.describe 'Storefront Customers', type: :request do
       }
 
       response '201', 'Customer registered' do
+        let(:body) do
+          {
+            customer: {
+              email: 'new@customer.com',
+              first_name: 'Jane',
+              last_name: 'Doe',
+              password: 'password123',
+              password_confirmation: 'password123'
+            }
+          }
+        end
         schema type: :object, properties: {
           customer: { '$ref': '#/components/schemas/customer' },
           token: { type: :string, description: 'JWT token valid for 24 hours. Send as X-Customer-Token header.' }
@@ -36,6 +50,15 @@ RSpec.describe 'Storefront Customers', type: :request do
       end
 
       response '422', 'Validation errors' do
+        let(:body) do
+          {
+            customer: {
+              email: '',
+              password: 'password123',
+              password_confirmation: 'password123'
+            }
+          }
+        end
         schema type: :object, properties: {
           errors: { type: :array, items: { type: :string } }
         }

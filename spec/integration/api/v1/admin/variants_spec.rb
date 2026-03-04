@@ -1,8 +1,15 @@
 require 'swagger_helper'
 
 RSpec.describe 'Admin Variants', type: :request do
+  # store, user, Authorization, and Current.store are provided by the
+  # 'admin_bearer_auth' shared context defined in swagger_helper.rb.
+
+  let(:product) { create(:product, store: store) }
+
   path '/api/v1/admin/products/{product_id}/variants' do
-    parameter name: :product_id, in: :path, type: :integer, required: true, description: 'Product ID'
+    parameter name: :product_id, in: :path, type: :string, required: true, description: 'Product ID'
+
+    let(:product_id) { product.id }
 
     get 'List variants' do
       tags 'Admin / Variants'
@@ -10,6 +17,8 @@ RSpec.describe 'Admin Variants', type: :request do
       security [bearer_auth: []]
 
       response '200', 'Variants list' do
+        before { create_list(:product_variant, 2, product: product, store: store) }
+
         schema type: :object, properties: {
           variants: {
             type: :array,
@@ -20,6 +29,7 @@ RSpec.describe 'Admin Variants', type: :request do
       end
 
       response '401', 'Unauthorized' do
+        let(:Authorization) { nil }
         run_test!
       end
     end
@@ -55,23 +65,31 @@ RSpec.describe 'Admin Variants', type: :request do
       }
 
       response '201', 'Variant created' do
+        let(:body) { { variant: { name: 'Large / Blue', price_cents: 3499 } } }
         schema '$ref': '#/components/schemas/variant'
         run_test!
       end
 
       response '401', 'Unauthorized' do
+        let(:Authorization) { nil }
+        let(:body) { { variant: { name: 'Large / Blue', price_cents: 3499 } } }
         run_test!
       end
 
       response '422', 'Invalid parameters' do
+        let(:body) { { variant: { name: '', price_cents: nil } } }
         run_test!
       end
     end
   end
 
   path '/api/v1/admin/products/{product_id}/variants/{id}' do
-    parameter name: :product_id, in: :path, type: :integer, required: true, description: 'Product ID'
-    parameter name: :id, in: :path, type: :integer, required: true, description: 'Variant ID'
+    parameter name: :product_id, in: :path, type: :string, required: true, description: 'Product ID'
+    parameter name: :id, in: :path, type: :string, required: true, description: 'Variant ID'
+
+    let(:product_id) { product.id }
+    let(:variant) { create(:product_variant, product: product, store: store) }
+    let(:id) { variant.id }
 
     get 'Get variant' do
       tags 'Admin / Variants'
@@ -84,10 +102,12 @@ RSpec.describe 'Admin Variants', type: :request do
       end
 
       response '401', 'Unauthorized' do
+        let(:Authorization) { nil }
         run_test!
       end
 
       response '404', 'Not found' do
+        let(:id) { '00000000-0000-0000-0000-000000000000' }
         run_test!
       end
     end
@@ -121,19 +141,25 @@ RSpec.describe 'Admin Variants', type: :request do
       }
 
       response '200', 'Variant updated' do
+        let(:body) { { variant: { name: 'Updated Variant' } } }
         schema '$ref': '#/components/schemas/variant'
         run_test!
       end
 
       response '401', 'Unauthorized' do
+        let(:Authorization) { nil }
+        let(:body) { { variant: { name: 'Updated' } } }
         run_test!
       end
 
       response '404', 'Not found' do
+        let(:id) { '00000000-0000-0000-0000-000000000000' }
+        let(:body) { { variant: { name: 'Updated' } } }
         run_test!
       end
 
       response '422', 'Invalid parameters' do
+        let(:body) { { variant: { name: '' } } }
         run_test!
       end
     end
@@ -147,10 +173,12 @@ RSpec.describe 'Admin Variants', type: :request do
       end
 
       response '401', 'Unauthorized' do
+        let(:Authorization) { nil }
         run_test!
       end
 
       response '404', 'Not found' do
+        let(:id) { '00000000-0000-0000-0000-000000000000' }
         run_test!
       end
     end

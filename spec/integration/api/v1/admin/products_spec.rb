@@ -1,6 +1,9 @@
 require 'swagger_helper'
 
 RSpec.describe 'Admin Products', type: :request do
+  # store, user, Authorization, and Current.store are provided by the
+  # 'admin_bearer_auth' shared context defined in swagger_helper.rb.
+
   path '/api/v1/admin/products' do
     get 'List products' do
       tags 'Admin / Products'
@@ -15,6 +18,8 @@ RSpec.describe 'Admin Products', type: :request do
       parameter name: :featured, in: :query, type: :boolean, required: false, description: 'Filter featured products'
 
       response '200', 'Products list' do
+        before { create_list(:product, 2, store: store) }
+
         schema type: :object, properties: {
           products: {
             type: :array,
@@ -26,6 +31,7 @@ RSpec.describe 'Admin Products', type: :request do
       end
 
       response '401', 'Unauthorized' do
+        let(:Authorization) { nil }
         run_test!
       end
     end
@@ -45,7 +51,7 @@ RSpec.describe 'Admin Products', type: :request do
               name: { type: :string, example: 'Premium T-Shirt' },
               description: { type: :string },
               short_description: { type: :string },
-              category_id: { type: :integer },
+              category_id: { type: :string },
               base_price_cents: { type: :integer, example: 2999 },
               base_price_currency: { type: :string, example: 'USD' },
               compare_at_price_cents: { type: :integer, nullable: true },
@@ -67,22 +73,29 @@ RSpec.describe 'Admin Products', type: :request do
       }
 
       response '201', 'Product created' do
+        let(:body) { { product: { name: 'Premium T-Shirt', base_price_cents: 2999 } } }
         schema '$ref': '#/components/schemas/product'
         run_test!
       end
 
       response '401', 'Unauthorized' do
+        let(:Authorization) { nil }
+        let(:body) { { product: { name: 'Premium T-Shirt', base_price_cents: 2999 } } }
         run_test!
       end
 
       response '422', 'Invalid parameters' do
+        let(:body) { { product: { name: '', base_price_cents: nil } } }
         run_test!
       end
     end
   end
 
   path '/api/v1/admin/products/{id}' do
-    parameter name: :id, in: :path, type: :integer, required: true, description: 'Product ID'
+    parameter name: :id, in: :path, type: :string, required: true, description: 'Product ID'
+
+    let(:product) { create(:product, store: store) }
+    let(:id) { product.id }
 
     get 'Get product' do
       tags 'Admin / Products'
@@ -95,10 +108,12 @@ RSpec.describe 'Admin Products', type: :request do
       end
 
       response '401', 'Unauthorized' do
+        let(:Authorization) { nil }
         run_test!
       end
 
       response '404', 'Not found' do
+        let(:id) { '00000000-0000-0000-0000-000000000000' }
         run_test!
       end
     end
@@ -118,7 +133,7 @@ RSpec.describe 'Admin Products', type: :request do
               name: { type: :string },
               description: { type: :string },
               short_description: { type: :string },
-              category_id: { type: :integer },
+              category_id: { type: :string },
               base_price_cents: { type: :integer },
               base_price_currency: { type: :string },
               compare_at_price_cents: { type: :integer, nullable: true },
@@ -138,19 +153,25 @@ RSpec.describe 'Admin Products', type: :request do
       }
 
       response '200', 'Product updated' do
+        let(:body) { { product: { name: 'Updated Product' } } }
         schema '$ref': '#/components/schemas/product'
         run_test!
       end
 
       response '401', 'Unauthorized' do
+        let(:Authorization) { nil }
+        let(:body) { { product: { name: 'Updated' } } }
         run_test!
       end
 
       response '404', 'Not found' do
+        let(:id) { '00000000-0000-0000-0000-000000000000' }
+        let(:body) { { product: { name: 'Updated' } } }
         run_test!
       end
 
       response '422', 'Invalid parameters' do
+        let(:body) { { product: { name: '' } } }
         run_test!
       end
     end
@@ -164,10 +185,12 @@ RSpec.describe 'Admin Products', type: :request do
       end
 
       response '401', 'Unauthorized' do
+        let(:Authorization) { nil }
         run_test!
       end
 
       response '404', 'Not found' do
+        let(:id) { '00000000-0000-0000-0000-000000000000' }
         run_test!
       end
     end

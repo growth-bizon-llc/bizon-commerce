@@ -13,7 +13,7 @@ RSpec.describe ProductImage, type: :model do
   describe '#image_url' do
     it 'returns nil when no image attached' do
       product = create(:product, store: store)
-      image = create(:product_image, product: product, store: store)
+      image = ProductImage.new(product: product, store: store)
       expect(image.image_url).to be_nil
     end
 

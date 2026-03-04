@@ -1,7 +1,32 @@
 require 'rails_helper'
 
+# Shared context for admin integration tests that use bearer_auth security.
+# Rswag resolves `security [bearer_auth: []]` by calling `let(:Authorization)`.
+RSpec.shared_context 'admin_bearer_auth' do
+  let(:store) { create(:store) }
+  let(:user) { create(:user, :owner, store: store, password: 'password123') }
+  let(:Authorization) { "Bearer #{Warden::JWTAuth::UserEncoder.new.call(user, :user, nil).first}" }
+
+  before { Current.store = store }
+end
+
+# Shared context for storefront integration tests that use store_domain security.
+# Rswag resolves `security [store_domain: []]` by calling `let(:'X-Store-Domain')`.
+RSpec.shared_context 'storefront_store_domain' do
+  let(:store) { create(:store) }
+  let(:'X-Store-Domain') { store.custom_domain || store.subdomain }
+  let(:'X-Cart-Token') { nil }
+  let(:'X-Customer-Token') { nil }
+
+  before { Current.store = store }
+end
+
 RSpec.configure do |config|
   config.openapi_root = Rails.root.to_s + '/swagger'
+
+  # Auto-include shared contexts for integration tests based on path
+  config.include_context 'admin_bearer_auth', file_path: %r{spec/integration/api/v1/admin/}
+  config.include_context 'storefront_store_domain', file_path: %r{spec/integration/api/v1/storefront/}
 
   config.openapi_specs = {
     'v1/swagger.yaml' => {
@@ -62,13 +87,13 @@ RSpec.configure do |config|
           category: {
             type: :object,
             properties: {
-              id: { type: :integer },
+              id: { type: :string, format: :uuid },
               name: { type: :string },
               slug: { type: :string },
               description: { type: :string, nullable: true },
               position: { type: :integer, nullable: true },
               active: { type: :boolean },
-              parent_id: { type: :integer, nullable: true },
+              parent_id: { type: :string, format: :uuid, nullable: true },
               children_count: { type: :integer },
               products_count: { type: :integer },
               created_at: { type: :string, format: 'date-time' },
@@ -78,7 +103,7 @@ RSpec.configure do |config|
           variant: {
             type: :object,
             properties: {
-              id: { type: :integer },
+              id: { type: :string, format: :uuid },
               name: { type: :string },
               sku: { type: :string, nullable: true },
               track_inventory: { type: :boolean },
@@ -95,7 +120,7 @@ RSpec.configure do |config|
           product_image: {
             type: :object,
             properties: {
-              id: { type: :integer },
+              id: { type: :string, format: :uuid },
               position: { type: :integer, nullable: true },
               alt_text: { type: :string, nullable: true },
               url: { type: :string, nullable: true },
@@ -106,7 +131,7 @@ RSpec.configure do |config|
           product: {
             type: :object,
             properties: {
-              id: { type: :integer },
+              id: { type: :string, format: :uuid },
               name: { type: :string },
               slug: { type: :string },
               description: { type: :string, nullable: true },
@@ -126,12 +151,12 @@ RSpec.configure do |config|
                 type: :object,
                 nullable: true,
                 properties: {
-                  id: { type: :integer },
+                  id: { type: :string, format: :uuid },
                   name: { type: :string },
                   slug: { type: :string },
                   position: { type: :integer, nullable: true },
                   active: { type: :boolean },
-                  parent_id: { type: :integer, nullable: true }
+                  parent_id: { type: :string, format: :uuid, nullable: true }
                 }
               },
               variants: {
@@ -149,7 +174,7 @@ RSpec.configure do |config|
           product_list: {
             type: :object,
             properties: {
-              id: { type: :integer },
+              id: { type: :string, format: :uuid },
               name: { type: :string },
               slug: { type: :string },
               short_description: { type: :string, nullable: true },
@@ -169,7 +194,7 @@ RSpec.configure do |config|
           customer: {
             type: :object,
             properties: {
-              id: { type: :integer },
+              id: { type: :string, format: :uuid },
               email: { type: :string },
               first_name: { type: :string, nullable: true },
               last_name: { type: :string, nullable: true },
@@ -184,14 +209,14 @@ RSpec.configure do |config|
           cart_item: {
             type: :object,
             properties: {
-              id: { type: :integer },
+              id: { type: :string, format: :uuid },
               quantity: { type: :integer },
               unit_price: { '$ref': '#/components/schemas/money' },
               total: { '$ref': '#/components/schemas/money' },
               product: {
                 type: :object,
                 properties: {
-                  id: { type: :integer },
+                  id: { type: :string, format: :uuid },
                   name: { type: :string },
                   slug: { type: :string }
                 }
@@ -200,7 +225,7 @@ RSpec.configure do |config|
                 type: :object,
                 nullable: true,
                 properties: {
-                  id: { type: :integer },
+                  id: { type: :string, format: :uuid },
                   name: { type: :string }
                 }
               },
@@ -211,7 +236,7 @@ RSpec.configure do |config|
           cart: {
             type: :object,
             properties: {
-              id: { type: :integer },
+              id: { type: :string, format: :uuid },
               token: { type: :string },
               status: { type: :string },
               metadata: { type: :object, nullable: true },
@@ -229,9 +254,9 @@ RSpec.configure do |config|
           order_item: {
             type: :object,
             properties: {
-              id: { type: :integer },
-              product_id: { type: :integer },
-              product_variant_id: { type: :integer, nullable: true },
+              id: { type: :string, format: :uuid },
+              product_id: { type: :string, format: :uuid },
+              product_variant_id: { type: :string, format: :uuid, nullable: true },
               product_name: { type: :string },
               variant_name: { type: :string, nullable: true },
               sku: { type: :string, nullable: true },
@@ -243,7 +268,7 @@ RSpec.configure do |config|
           order: {
             type: :object,
             properties: {
-              id: { type: :integer },
+              id: { type: :string, format: :uuid },
               order_number: { type: :string, example: '#1001' },
               email: { type: :string },
               status: { type: :string, enum: %w[pending confirmed paid processing shipped delivered cancelled refunded] },
@@ -258,7 +283,7 @@ RSpec.configure do |config|
                 type: :object,
                 nullable: true,
                 properties: {
-                  id: { type: :integer },
+                  id: { type: :string, format: :uuid },
                   email: { type: :string },
                   first_name: { type: :string },
                   last_name: { type: :string }
@@ -280,7 +305,7 @@ RSpec.configure do |config|
           order_list: {
             type: :object,
             properties: {
-              id: { type: :integer },
+              id: { type: :string, format: :uuid },
               order_number: { type: :string },
               email: { type: :string },
               status: { type: :string },

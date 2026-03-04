@@ -1,6 +1,9 @@
 require 'swagger_helper'
 
 RSpec.describe 'Admin Store', type: :request do
+  # store, user, Authorization, and Current.store are provided by the
+  # 'admin_bearer_auth' shared context defined in swagger_helper.rb.
+
   path '/api/v1/admin/store' do
     get 'Get store details' do
       tags 'Admin / Store'
@@ -9,7 +12,7 @@ RSpec.describe 'Admin Store', type: :request do
 
       response '200', 'Store found' do
         schema type: :object, properties: {
-          id: { type: :integer },
+          id: { type: :string, format: :uuid },
           name: { type: :string },
           slug: { type: :string },
           custom_domain: { type: :string, nullable: true },
@@ -26,6 +29,7 @@ RSpec.describe 'Admin Store', type: :request do
       end
 
       response '401', 'Unauthorized' do
+        let(:Authorization) { nil }
         run_test!
       end
     end
@@ -56,8 +60,10 @@ RSpec.describe 'Admin Store', type: :request do
       }
 
       response '200', 'Store updated' do
+        let(:body) { { store: { name: 'Updated Store Name' } } }
+
         schema type: :object, properties: {
-          id: { type: :integer },
+          id: { type: :string, format: :uuid },
           name: { type: :string },
           slug: { type: :string },
           custom_domain: { type: :string, nullable: true },
@@ -74,10 +80,13 @@ RSpec.describe 'Admin Store', type: :request do
       end
 
       response '401', 'Unauthorized' do
+        let(:Authorization) { nil }
+        let(:body) { { store: { name: 'Updated' } } }
         run_test!
       end
 
       response '422', 'Invalid parameters' do
+        let(:body) { { store: { name: '' } } }
         run_test!
       end
     end

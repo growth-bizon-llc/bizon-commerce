@@ -1,6 +1,9 @@
 require 'swagger_helper'
 
 RSpec.describe 'Admin Dashboard', type: :request do
+  # store, user, Authorization, and Current.store are provided by the
+  # 'admin_bearer_auth' shared context defined in swagger_helper.rb.
+
   path '/api/v1/admin/dashboard' do
     get 'Get dashboard metrics' do
       tags 'Admin / Dashboard'
@@ -19,7 +22,7 @@ RSpec.describe 'Admin Dashboard', type: :request do
             items: {
               type: :object,
               properties: {
-                id: { type: :integer },
+                id: { type: :string, format: :uuid },
                 order_number: { type: :string },
                 email: { type: :string },
                 status: { type: :string },
@@ -41,6 +44,7 @@ RSpec.describe 'Admin Dashboard', type: :request do
       end
 
       response '401', 'Unauthorized' do
+        let(:Authorization) { nil }
         run_test!
       end
     end

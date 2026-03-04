@@ -20,9 +20,10 @@ module Orders
       end
 
       @order.aasm.fire!(@event.to_sym)
+      @order.save!
       @result = @order
       self
-    rescue AASM::InvalidTransition => e
+    rescue AASM::InvalidTransition, ActiveRecord::RecordInvalid => e
       @errors << e.message
       self
     end

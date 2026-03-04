@@ -14,11 +14,11 @@ RSpec.describe Store, type: :model do
     it { should have_many(:users).dependent(:destroy) }
     it { should have_many(:categories).dependent(:destroy) }
     it { should have_many(:products).dependent(:destroy) }
-    it { should have_many(:product_variants).dependent(:destroy) }
-    it { should have_many(:product_images).dependent(:destroy) }
+    it { should have_many(:product_variants).dependent(:restrict_with_error) }
+    it { should have_many(:product_images).dependent(:restrict_with_error) }
     it { should have_many(:customers).dependent(:destroy) }
     it { should have_many(:carts).dependent(:destroy) }
-    it { should have_many(:orders).dependent(:destroy) }
+    it { should have_many(:orders).dependent(:restrict_with_error) }
   end
 
   describe 'friendly_id' do

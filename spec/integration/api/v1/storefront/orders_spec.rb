@@ -1,6 +1,11 @@
 require 'swagger_helper'
 
 RSpec.describe 'Storefront Orders', type: :request do
+  # store, X-Store-Domain, X-Cart-Token, X-Customer-Token, and Current.store
+  # are provided by the 'storefront_store_domain' shared context in swagger_helper.rb.
+
+  let(:product) { create(:product, :active, store: store, base_price_cents: 2500) }
+
   path '/api/v1/storefront/orders' do
     post 'Create order (checkout)' do
       tags 'Storefront / Orders'
@@ -47,11 +52,28 @@ RSpec.describe 'Storefront Orders', type: :request do
       }
 
       response '201', 'Order created' do
+        let(:cart) { create(:cart, store: store) }
+
+        before do
+          create(:cart_item, cart: cart, product: product, unit_price_cents: 2500, quantity: 1)
+        end
+
+        let(:'X-Cart-Token') { cart.token }
+        let(:body) do
+          {
+            email: 'buyer@test.com',
+            shipping_address: { line1: '123 Main St', city: 'NY', state: 'NY', zip: '10001' }
+          }
+        end
+
         schema '$ref': '#/components/schemas/order'
         run_test!
       end
 
       response '422', 'Invalid parameters or empty cart' do
+        let(:empty_cart) { create(:cart, store: store) }
+        let(:'X-Cart-Token') { empty_cart.token }
+        let(:body) { { email: 'test@test.com', shipping_address: {} } }
         schema type: :object, properties: {
           errors: { type: :array, items: { type: :string } }
         }
@@ -70,11 +92,16 @@ RSpec.describe 'Storefront Orders', type: :request do
       security [store_domain: []]
 
       response '200', 'Order found' do
+        let(:order_number) { '2001' }
+
+        before { create(:order, :with_items, store: store, order_number: '#2001') }
+
         schema '$ref': '#/components/schemas/order'
         run_test!
       end
 
       response '404', 'Not found' do
+        let(:order_number) { '9999' }
         run_test!
       end
     end

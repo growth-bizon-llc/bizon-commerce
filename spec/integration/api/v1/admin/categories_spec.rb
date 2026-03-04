@@ -1,6 +1,9 @@
 require 'swagger_helper'
 
 RSpec.describe 'Admin Categories', type: :request do
+  # store, user, Authorization, and Current.store are provided by the
+  # 'admin_bearer_auth' shared context defined in swagger_helper.rb.
+
   path '/api/v1/admin/categories' do
     get 'List categories' do
       tags 'Admin / Categories'
@@ -11,19 +14,21 @@ RSpec.describe 'Admin Categories', type: :request do
       parameter name: :items, in: :query, type: :integer, required: false, description: 'Items per page'
 
       response '200', 'Categories list' do
+        before { create_list(:category, 2, store: store) }
+
         schema type: :object, properties: {
           categories: {
             type: :array,
             items: {
               type: :object,
               properties: {
-                id: { type: :integer },
+                id: { type: :string, format: :uuid },
                 name: { type: :string },
                 slug: { type: :string },
                 description: { type: :string, nullable: true },
                 position: { type: :integer, nullable: true },
                 active: { type: :boolean },
-                parent_id: { type: :integer, nullable: true },
+                parent_id: { type: :string, format: :uuid, nullable: true },
                 children_count: { type: :integer },
                 products_count: { type: :integer },
                 created_at: { type: :string, format: 'date-time' },
@@ -45,6 +50,7 @@ RSpec.describe 'Admin Categories', type: :request do
       end
 
       response '401', 'Unauthorized' do
+        let(:Authorization) { nil }
         run_test!
       end
     end
@@ -74,22 +80,29 @@ RSpec.describe 'Admin Categories', type: :request do
       }
 
       response '201', 'Category created' do
+        let(:body) { { category: { name: 'Electronics', description: 'Electronic devices' } } }
         schema '$ref': '#/components/schemas/category'
         run_test!
       end
 
       response '401', 'Unauthorized' do
+        let(:Authorization) { nil }
+        let(:body) { { category: { name: 'Electronics' } } }
         run_test!
       end
 
       response '422', 'Invalid parameters' do
+        let(:body) { { category: { name: '' } } }
         run_test!
       end
     end
   end
 
   path '/api/v1/admin/categories/{id}' do
-    parameter name: :id, in: :path, type: :integer, required: true, description: 'Category ID'
+    parameter name: :id, in: :path, type: :string, required: true, description: 'Category ID'
+
+    let(:category) { create(:category, store: store) }
+    let(:id) { category.id }
 
     get 'Get category' do
       tags 'Admin / Categories'
@@ -102,10 +115,12 @@ RSpec.describe 'Admin Categories', type: :request do
       end
 
       response '401', 'Unauthorized' do
+        let(:Authorization) { nil }
         run_test!
       end
 
       response '404', 'Not found' do
+        let(:id) { 0 }
         run_test!
       end
     end
@@ -133,19 +148,25 @@ RSpec.describe 'Admin Categories', type: :request do
       }
 
       response '200', 'Category updated' do
+        let(:body) { { category: { name: 'Updated Category' } } }
         schema '$ref': '#/components/schemas/category'
         run_test!
       end
 
       response '401', 'Unauthorized' do
+        let(:Authorization) { nil }
+        let(:body) { { category: { name: 'Updated' } } }
         run_test!
       end
 
       response '404', 'Not found' do
+        let(:id) { 0 }
+        let(:body) { { category: { name: 'Updated' } } }
         run_test!
       end
 
       response '422', 'Invalid parameters' do
+        let(:body) { { category: { name: '' } } }
         run_test!
       end
     end
@@ -159,10 +180,12 @@ RSpec.describe 'Admin Categories', type: :request do
       end
 
       response '401', 'Unauthorized' do
+        let(:Authorization) { nil }
         run_test!
       end
 
       response '404', 'Not found' do
+        let(:id) { 0 }
         run_test!
       end
     end

@@ -1,6 +1,9 @@
 require 'swagger_helper'
 
 RSpec.describe 'Storefront Products', type: :request do
+  # store, X-Store-Domain, and Current.store are provided by the
+  # 'storefront_store_domain' shared context defined in swagger_helper.rb.
+
   path '/api/v1/storefront/products' do
     get 'List products' do
       tags 'Storefront / Products'
@@ -9,12 +12,14 @@ RSpec.describe 'Storefront Products', type: :request do
 
       parameter name: :page, in: :query, type: :integer, required: false, description: 'Page number'
       parameter name: :items, in: :query, type: :integer, required: false, description: 'Items per page'
-      parameter name: :category_id, in: :query, type: :integer, required: false, description: 'Filter by category'
+      parameter name: :category_id, in: :query, type: :string, required: false, description: 'Filter by category'
       parameter name: :q, in: :query, type: :string, required: false, description: 'Search by name'
       parameter name: :featured, in: :query, type: :boolean, required: false, description: 'Filter featured products'
       parameter name: :in_stock, in: :query, type: :boolean, required: false, description: 'Filter in-stock products'
 
       response '200', 'Products list' do
+        before { create_list(:product, 2, :active, store: store) }
+
         schema type: :object, properties: {
           products: {
             type: :array,
@@ -36,11 +41,15 @@ RSpec.describe 'Storefront Products', type: :request do
       security [store_domain: []]
 
       response '200', 'Product found' do
+        let(:product) { create(:product, :active, store: store) }
+        let(:slug) { product.slug }
+
         schema '$ref': '#/components/schemas/product'
         run_test!
       end
 
       response '404', 'Not found' do
+        let(:slug) { 'nonexistent-slug' }
         run_test!
       end
     end

@@ -50,15 +50,13 @@ RSpec.describe Order, type: :model do
   describe 'order_number generation' do
     it 'auto-generates order_number on create' do
       order = Order.create!(store: store, email: 'test@test.com')
-      expect(order.order_number).to match(/^#\d+$/)
+      expect(order.order_number).to match(/^#BZ-[A-Z0-9]{8}$/)
     end
 
-    it 'increments order numbers sequentially' do
+    it 'generates unique order numbers' do
       order1 = Order.create!(store: store, email: 'test@test.com')
       order2 = Order.create!(store: store, email: 'test@test.com')
-      n1 = order1.order_number.delete('#').to_i
-      n2 = order2.order_number.delete('#').to_i
-      expect(n2).to eq(n1 + 1)
+      expect(order1.order_number).not_to eq(order2.order_number)
     end
   end
 

@@ -68,7 +68,7 @@ RSpec.describe Orders::CreateFromCartService do
         service = described_class.new(cart: cart, email: 'test@test.com')
         service.call
 
-        expect(service.result.order_number).to match(/^#\d+$/)
+        expect(service.result.order_number).to match(/^#BZ-[A-Z0-9]{8}$/)
       end
 
       it 'sets placed_at' do

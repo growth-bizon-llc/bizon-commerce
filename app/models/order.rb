@@ -30,11 +30,10 @@ class Order < ApplicationRecord
     end
 
     event :pay do
-      transitions from: :confirmed, to: :paid do
-        before do
-          self.paid_at = Time.current
-        end
+      before do
+        self.paid_at = Time.current
       end
+      transitions from: :confirmed, to: :paid
     end
 
     event :process_order do
@@ -42,27 +41,24 @@ class Order < ApplicationRecord
     end
 
     event :ship do
-      transitions from: :processing, to: :shipped do
-        before do
-          self.shipped_at = Time.current
-        end
+      before do
+        self.shipped_at = Time.current
       end
+      transitions from: :processing, to: :shipped
     end
 
     event :deliver do
-      transitions from: :shipped, to: :delivered do
-        before do
-          self.delivered_at = Time.current
-        end
+      before do
+        self.delivered_at = Time.current
       end
+      transitions from: :shipped, to: :delivered
     end
 
     event :cancel do
-      transitions from: [:pending, :confirmed], to: :cancelled do
-        before do
-          self.cancelled_at = Time.current
-        end
+      before do
+        self.cancelled_at = Time.current
       end
+      transitions from: [:pending, :confirmed], to: :cancelled
     end
 
     event :refund do

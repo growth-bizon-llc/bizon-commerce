@@ -1,6 +1,9 @@
 require 'swagger_helper'
 
 RSpec.describe 'Storefront Categories', type: :request do
+  # store, X-Store-Domain, and Current.store are provided by the
+  # 'storefront_store_domain' shared context defined in swagger_helper.rb.
+
   path '/api/v1/storefront/categories' do
     get 'List categories' do
       tags 'Storefront / Categories'
@@ -8,6 +11,8 @@ RSpec.describe 'Storefront Categories', type: :request do
       security [store_domain: []]
 
       response '200', 'Categories list' do
+        before { create_list(:category, 2, store: store) }
+
         schema type: :object, properties: {
           categories: {
             type: :array,
@@ -31,6 +36,9 @@ RSpec.describe 'Storefront Categories', type: :request do
       parameter name: :items, in: :query, type: :integer, required: false, description: 'Items per page'
 
       response '200', 'Category with products' do
+        let(:category) { create(:category, store: store) }
+        let(:slug) { category.slug }
+
         schema type: :object, properties: {
           category: { '$ref': '#/components/schemas/category' },
           products: {
@@ -43,6 +51,7 @@ RSpec.describe 'Storefront Categories', type: :request do
       end
 
       response '404', 'Not found' do
+        let(:slug) { 'nonexistent-category' }
         run_test!
       end
     end

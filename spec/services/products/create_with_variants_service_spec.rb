@@ -71,7 +71,7 @@ RSpec.describe Products::CreateWithVariantsService do
       expect(ProductVariant.count).to eq(0)
     end
 
-    it 'creates product with images' do
+    it 'fails when images have no file attached' do
       images = [
         { alt_text: 'Front view', file: nil },
         { alt_text: 'Side view', file: nil }
@@ -84,9 +84,8 @@ RSpec.describe Products::CreateWithVariantsService do
       )
       service.call
 
-      expect(service).to be_success
-      expect(service.result.product_images.count).to eq(2)
-      expect(service.result.product_images.map(&:alt_text)).to contain_exactly('Front view', 'Side view')
+      expect(service).not_to be_success
+      expect(service.errors).to be_present
     end
   end
 end

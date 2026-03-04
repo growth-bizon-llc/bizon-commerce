@@ -22,12 +22,28 @@ RSpec.describe 'Api::V1::Admin::ProductImages', type: :request do
 
   describe 'POST /api/v1/admin/products/:product_id/images' do
     it 'creates an image' do
+      image_file = Rack::Test::UploadedFile.new(
+        StringIO.new("\x89PNG\r\n\x1a\n" + "\x00" * 100),
+        'image/png',
+        true,
+        original_filename: 'test.png'
+      )
+
       post "/api/v1/admin/products/#{product.id}/images",
-           params: { position: 0, alt_text: 'Product photo' },
-           headers: headers, as: :json
+           params: { image: image_file, position: 0, alt_text: 'Product photo' },
+           headers: headers
 
       expect(response).to have_http_status(:created)
       expect(json_response['alt_text']).to eq('Product photo')
+    end
+
+    it 'returns error without image file' do
+      post "/api/v1/admin/products/#{product.id}/images",
+           params: { position: 0, alt_text: 'No image' },
+           headers: headers, as: :json
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(json_response['error']).to eq('Image file is required')
     end
   end
 
