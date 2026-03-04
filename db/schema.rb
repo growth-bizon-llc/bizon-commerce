@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_13_013255) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_04_041732) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -239,6 +239,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_13_013255) do
     t.jsonb "settings", default: {}
     t.string "slug", null: false
     t.string "subdomain"
+    t.decimal "tax_rate", precision: 5, scale: 2, default: "0.0", null: false
     t.datetime "updated_at", null: false
     t.index ["custom_domain"], name: "index_stores_on_custom_domain", unique: true
     t.index ["slug"], name: "index_stores_on_slug", unique: true

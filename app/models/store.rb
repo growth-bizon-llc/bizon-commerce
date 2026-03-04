@@ -16,4 +16,5 @@ class Store < ApplicationRecord
   validates :currency, length: { is: 3 }, allow_nil: true
   validates :custom_domain, uniqueness: true, allow_nil: true
   validates :subdomain, uniqueness: true, allow_nil: true
+  validates :tax_rate, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
 end

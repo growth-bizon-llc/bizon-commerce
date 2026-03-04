@@ -18,7 +18,7 @@ module Api
         def store_params
           params.require(:store).permit(:name, :description, :custom_domain,
                                         :subdomain, :currency, :locale, :active,
-                                        settings: {})
+                                        :tax_rate, settings: {})
         end
       end
     end
