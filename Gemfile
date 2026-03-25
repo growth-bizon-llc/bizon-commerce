@@ -54,7 +54,7 @@ gem "sidekiq"
 gem "discard"
 
 # Password hashing for customers
-gem "bcrypt", "~> 3.1.7"
+gem "bcrypt", "~> 3.1.22"
 
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
