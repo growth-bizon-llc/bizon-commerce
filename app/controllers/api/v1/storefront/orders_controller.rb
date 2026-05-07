@@ -3,6 +3,7 @@ module Api
     module Storefront
       class OrdersController < BaseController
         before_action :ensure_cart, only: [:create]
+        before_action :authenticate_customer!, only: [:show]
 
         def create
           service = Orders::CreateFromCartService.new(
@@ -23,7 +24,8 @@ module Api
         end
 
         def show
-          order = Order.where(store: Current.store).find_by!(order_number: "##{params[:order_number]}")
+          order = Order.where(store: Current.store, customer: current_customer)
+                       .find_by!(order_number: "##{params[:order_number]}")
           render json: OrderSerializer.new(order).to_h
         end
 

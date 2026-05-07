@@ -39,7 +39,7 @@ module Orders
 
     def create_order
       subtotal = @cart.total
-      tax = 0
+      tax = (subtotal * @cart.store.tax_rate / 100.0).round
       total = subtotal + tax
 
       Order.create!(

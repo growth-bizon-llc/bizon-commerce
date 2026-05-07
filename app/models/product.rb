@@ -17,6 +17,7 @@ class Product < ApplicationRecord
   validates :base_price_cents, numericality: { greater_than_or_equal_to: 0 }
   validates :compare_at_price_cents, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
   validates :slug, uniqueness: { scope: :store_id }
+  validates :sku, uniqueness: { scope: :store_id }, allow_blank: true
   validates :status, inclusion: { in: %w[draft active archived] }
   validates :quantity, numericality: { greater_than_or_equal_to: 0 }
   validates :position, numericality: { greater_than_or_equal_to: 0 }

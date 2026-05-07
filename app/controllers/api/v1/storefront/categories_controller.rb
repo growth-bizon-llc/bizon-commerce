@@ -10,7 +10,8 @@ module Api
 
         def show
           category = Category.active.friendly.find(params[:slug])
-          products = category.products.active.ordered
+          category_ids = [category.id] + category.children.active.pluck(:id)
+          products = Product.active.where(category_id: category_ids).includes(:category, :product_images, :variants).ordered
           pagy, records = pagy(products)
 
           render json: {

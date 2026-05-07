@@ -2,10 +2,9 @@ module Api
   module V1
     module Admin
       class DashboardsController < BaseController
-        skip_after_action :verify_authorized
-        skip_after_action :verify_policy_scoped
-
         def show
+          authorize :dashboard, :show?
+
           render json: {
             total_products: Product.where(store: Current.store).count,
             total_orders: Order.where(store: Current.store).count,

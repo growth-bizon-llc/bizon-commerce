@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_04_041732) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_07_025046) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -192,7 +192,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_04_041732) do
     t.datetime "updated_at", null: false
     t.index ["discarded_at"], name: "index_product_variants_on_discarded_at"
     t.index ["product_id"], name: "index_product_variants_on_product_id"
-    t.index ["sku"], name: "index_product_variants_on_sku"
+    t.index ["store_id", "sku"], name: "index_product_variants_on_store_id_and_sku_unique", unique: true, where: "(sku IS NOT NULL)"
     t.index ["store_id"], name: "index_product_variants_on_store_id"
   end
 
@@ -221,8 +221,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_04_041732) do
     t.datetime "updated_at", null: false
     t.index ["category_id"], name: "index_products_on_category_id"
     t.index ["discarded_at"], name: "index_products_on_discarded_at"
-    t.index ["sku"], name: "index_products_on_sku"
     t.index ["store_id", "featured"], name: "index_products_on_store_id_and_featured"
+    t.index ["store_id", "sku"], name: "index_products_on_store_id_and_sku_unique", unique: true, where: "(sku IS NOT NULL)"
     t.index ["store_id", "slug"], name: "index_products_on_store_id_and_slug", unique: true
     t.index ["store_id", "status"], name: "index_products_on_store_id_and_status"
     t.index ["store_id"], name: "index_products_on_store_id"

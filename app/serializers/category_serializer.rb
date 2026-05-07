@@ -11,4 +11,14 @@ class CategorySerializer
   attribute :products_count do |category|
     category.products.size
   end
+
+  attribute :image_url do |category|
+    if category.image.attached?
+      Rails.application.routes.url_helpers.rails_blob_url(
+        category.image,
+        host: ENV.fetch('APP_HOST', 'localhost'),
+        port: ENV.fetch('APP_PORT', 3000)
+      )
+    end
+  end
 end

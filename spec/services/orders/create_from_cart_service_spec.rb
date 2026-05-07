@@ -77,6 +77,15 @@ RSpec.describe Orders::CreateFromCartService do
 
         expect(service.result.placed_at).to be_present
       end
+
+      it 'calculates tax from store tax_rate' do
+        store.update!(tax_rate: 8.5)
+        service = described_class.new(cart: cart, email: 'test@test.com')
+        service.call
+
+        expect(service.result.tax_cents).to eq(425)
+        expect(service.result.total_cents).to eq(5425)
+      end
     end
 
     context 'with empty cart' do

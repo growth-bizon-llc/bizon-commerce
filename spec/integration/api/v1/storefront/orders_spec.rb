@@ -89,12 +89,20 @@ RSpec.describe 'Storefront Orders', type: :request do
     get 'Get order' do
       tags 'Storefront / Orders'
       produces 'application/json'
-      security [store_domain: []]
+      security [store_domain: [], customer_token: []]
+
+      let(:customer) { create(:customer, store: store) }
+      let(:'X-Customer-Token') do
+        JWT.encode(
+          { customer_id: customer.id, exp: 24.hours.from_now.to_i },
+          Rails.application.secret_key_base, 'HS256'
+        )
+      end
 
       response '200', 'Order found' do
         let(:order_number) { '2001' }
 
-        before { create(:order, :with_items, store: store, order_number: '#2001') }
+        before { create(:order, :with_items, store: store, order_number: '#2001', customer: customer) }
 
         schema '$ref': '#/components/schemas/order'
         run_test!

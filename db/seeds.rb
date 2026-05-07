@@ -23,7 +23,12 @@ JEWELRY_IMAGES = {
     "https://images.unsplash.com/photo-1742240439165-60790db1ee93?w=800&q=80",
     "https://images.unsplash.com/photo-1768569446356-07e653761aad?w=800&q=80",
     "https://images.unsplash.com/photo-1628926379972-9843ad139a8c?w=800&q=80",
-    "https://images.unsplash.com/photo-1758362197676-228703a17e69?w=800&q=80"
+    "https://images.unsplash.com/photo-1758362197676-228703a17e69?w=800&q=80",
+    "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=800&q=80",
+    "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?w=800&q=80",
+    "https://images.unsplash.com/photo-1598560917505-59a3ad559071?w=800&q=80",
+    "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?w=800&q=80",
+    "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&q=80"
   ],
   earrings: [
     "https://images.unsplash.com/photo-1758995115555-766abbd9a491?w=800&q=80",
@@ -35,7 +40,12 @@ JEWELRY_IMAGES = {
     "https://images.unsplash.com/photo-1769078595478-5f756986b818?w=800&q=80",
     "https://images.unsplash.com/photo-1602722872368-0cfc00f748ff?w=800&q=80",
     "https://images.unsplash.com/photo-1601511421129-f7e2f065a9d8?w=800&q=80",
-    "https://images.unsplash.com/photo-1616121341778-0dd435d03d23?w=800&q=80"
+    "https://images.unsplash.com/photo-1616121341778-0dd435d03d23?w=800&q=80",
+    "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=800&q=80",
+    "https://images.unsplash.com/photo-1630019852942-f89202989a59?w=800&q=80",
+    "https://images.unsplash.com/photo-1617038220319-276d3cfab638?w=800&q=80",
+    "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?w=800&q=80",
+    "https://images.unsplash.com/photo-1589128777073-263566ae5e4d?w=800&q=80"
   ],
   bracelets: [
     "https://images.unsplash.com/photo-1767921777873-81818b812a4d?w=800&q=80",
@@ -45,7 +55,11 @@ JEWELRY_IMAGES = {
     "https://images.unsplash.com/photo-1610223515196-65f21bc2347e?w=800&q=80",
     "https://images.unsplash.com/photo-1607269254302-b9e0c3343248?w=800&q=80",
     "https://images.unsplash.com/photo-1618713041735-adb0de8316ea?w=800&q=80",
-    "https://images.unsplash.com/photo-1625792508300-0e1f913a3a50?w=800&q=80"
+    "https://images.unsplash.com/photo-1625792508300-0e1f913a3a50?w=800&q=80",
+    "https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=800&q=80",
+    "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&q=80",
+    "https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=800&q=80",
+    "https://images.unsplash.com/photo-1600721391689-2564bb8055de?w=800&q=80"
   ],
   necklaces: [
     "https://images.unsplash.com/photo-1769857879388-df93b4c96bca?w=800&q=80",
@@ -55,27 +69,38 @@ JEWELRY_IMAGES = {
     "https://images.unsplash.com/photo-1611107683227-e9060eccd846?w=800&q=80",
     "https://images.unsplash.com/photo-1769909953707-31840816c5b3?w=800&q=80",
     "https://images.unsplash.com/photo-1758995115518-26f90aa61b97?w=800&q=80",
-    "https://images.unsplash.com/photo-1755151606128-7ca2f97e46ae?w=800&q=80"
+    "https://images.unsplash.com/photo-1755151606128-7ca2f97e46ae?w=800&q=80",
+    "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800&q=80",
+    "https://images.unsplash.com/photo-1610694955371-d4a3e0ce4b52?w=800&q=80",
+    "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=800&q=80",
+    "https://images.unsplash.com/photo-1596944924616-7b38e7cfac36?w=800&q=80"
   ],
   chains: [
     "https://images.unsplash.com/photo-1662434923031-b9bf1b6c10e2?w=800&q=80",
     "https://images.unsplash.com/photo-1598009632415-1b42a2c686b6?w=800&q=80",
     "https://images.unsplash.com/photo-1771734065116-61e16b353ded?w=800&q=80",
     "https://images.unsplash.com/photo-1761049293052-47731d0a304f?w=800&q=80",
-    "https://images.unsplash.com/photo-1771515411694-57fb626159d1?w=800&q=80"
+    "https://images.unsplash.com/photo-1771515411694-57fb626159d1?w=800&q=80",
+    "https://images.unsplash.com/photo-1608042314453-ae338d80c427?w=800&q=80",
+    "https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?w=800&q=80"
   ],
   gems: [
     "https://images.unsplash.com/photo-1583937443351-f2f669fbe2cf?w=800&q=80",
     "https://images.unsplash.com/photo-1653405507161-da7d205d86f4?w=800&q=80",
     "https://images.unsplash.com/photo-1767131545090-e13ae86c8e13?w=800&q=80",
     "https://images.unsplash.com/photo-1677777677068-9f3051ec5c79?w=800&q=80",
-    "https://images.unsplash.com/photo-1772047678328-fe7c51433288?w=800&q=80"
+    "https://images.unsplash.com/photo-1772047678328-fe7c51433288?w=800&q=80",
+    "https://images.unsplash.com/photo-1588444837495-c6cfeb53f32d?w=800&q=80",
+    "https://images.unsplash.com/photo-1543294001-f7cd5d7fb516?w=800&q=80",
+    "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=800&q=80"
   ],
   sets: [
     "https://images.unsplash.com/photo-1691370298583-4364b396e1e3?w=800&q=80",
     "https://images.unsplash.com/photo-1682823544433-aae34df4e3da?w=800&q=80",
     "https://images.unsplash.com/photo-1769116416517-594639a769a7?w=800&q=80",
-    "https://images.unsplash.com/photo-1767096612165-b5a33caa48a5?w=800&q=80"
+    "https://images.unsplash.com/photo-1767096612165-b5a33caa48a5?w=800&q=80",
+    "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=80",
+    "https://images.unsplash.com/photo-1617038220319-276d3cfab638?w=800&q=80"
   ]
 }.freeze
 
@@ -269,7 +294,45 @@ end
 puts "  Categories: #{categories_data.size} principales, #{categories_data.sum { |c| c[:subcategories].size }} subcategorías"
 
 # =============================================================================
-# PRODUCTS - 52 productos de joyería realistas
+# CATEGORY IMAGES
+# =============================================================================
+CATEGORY_IMAGES = {
+  'Anillos' => 'https://images.unsplash.com/photo-1512163143273-bde0e3cc7407?w=800&q=80',
+  'Aretes' => 'https://images.unsplash.com/photo-1758995115555-766abbd9a491?w=800&q=80',
+  'Pulseras y Manillas' => 'https://images.unsplash.com/photo-1767921777873-81818b812a4d?w=800&q=80',
+  'Collares' => 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=80',
+  'Cadenas' => 'https://images.unsplash.com/photo-1662434923031-b9bf1b6c10e2?w=800&q=80',
+  'Gemas y Piedras' => 'https://images.unsplash.com/photo-1653405507161-da7d205d86f4?w=800&q=80',
+  'Sets y Conjuntos' => 'https://images.unsplash.com/photo-1691370298583-4364b396e1e3?w=800&q=80'
+}.freeze
+
+puts "  Downloading category images from Unsplash..."
+cat_img_success = 0
+CATEGORY_IMAGES.each do |cat_name, url|
+  category = all_categories[cat_name]
+  next unless category
+  next if category.image.attached?
+
+  begin
+    downloaded = URI.parse(url).open(
+      'User-Agent' => 'Mozilla/5.0 (seed script)',
+      read_timeout: 15,
+      open_timeout: 10
+    )
+    category.image.attach(
+      io: downloaded,
+      filename: "category-#{category.slug}.jpg",
+      content_type: 'image/jpeg'
+    )
+    cat_img_success += 1
+  rescue StandardError => e
+    puts "    [WARN] Could not download image for category #{cat_name}: #{e.message}"
+  end
+end
+puts "  Category images: #{cat_img_success} attached"
+
+# =============================================================================
+# PRODUCTS
 # =============================================================================
 products_data = [
   # --- ANILLOS (12) ---
@@ -752,6 +815,402 @@ products_data = [
     base_price_cents: 395_000, compare_at_price_cents: nil,
     sku: 'SE-ANI-004', featured: false, status: 'draft',
     attributes: { piezas: 'Collar + Aretes + Anillo', piedra: 'Zafiro Azul' }
+  },
+
+  # --- NUEVOS PRODUCTOS (8) ---
+  {
+    name: 'Anillo Toi et Moi Esmeralda-Diamante',
+    category: 'Anillos de Compromiso',
+    description: 'Anillo Toi et Moi con esmeralda colombiana talla pera 0.8ct y diamante talla pera 0.6ct enfrentados. Banda abierta en oro amarillo 18k con micro-pavé.',
+    short_description: 'Toi et Moi esmeralda 0.8ct + diamante 0.6ct',
+    base_price_cents: 365_000, compare_at_price_cents: nil,
+    sku: 'AN-TOI-013', featured: true, status: 'active',
+    attributes: { piedra: 'Esmeralda + Diamante', estilo: 'Toi et Moi', origen: 'Colombia' }
+  },
+  {
+    name: 'Aretes Cluster Topacio Azul',
+    category: 'Studs',
+    description: 'Studs cluster con topacio azul london central de 5mm rodeado por 6 topacios sky blue de 2mm. Efecto floral geométrico. Oro blanco 14k.',
+    short_description: 'Cluster topacio london blue + sky blue oro 14k',
+    base_price_cents: 34_000, compare_at_price_cents: 42_000,
+    sku: 'AR-CLU-011', featured: false, status: 'active',
+    attributes: { piedra: 'Topacio Azul', diseño: 'Cluster floral' }
+  },
+  {
+    name: 'Pulsera Eslabones Paperclip',
+    category: 'Pulseras de Cadena',
+    description: 'Pulsera de eslabones alargados tipo paperclip en oro amarillo 18k. Eslabones de 12mm. Cierre de toggle decorativo. Largo: 18cm. Tendencia contemporánea.',
+    short_description: 'Paperclip eslabones 12mm oro amarillo 18k',
+    base_price_cents: 58_000, compare_at_price_cents: nil,
+    sku: 'PU-PPR-009', featured: false, status: 'active',
+    attributes: { tipo: 'Paperclip', cierre: 'Toggle', largo: '18cm' }
+  },
+  {
+    name: 'Colgante Medallón Vintage',
+    category: 'Colgantes',
+    description: 'Medallón ovalado con grabado floral que se abre para guardar dos fotografías. Interior bañado en oro. Cadena belcher 50cm. Oro amarillo 18k.',
+    short_description: 'Medallón grabado porta-fotos en oro 18k',
+    base_price_cents: 82_000, compare_at_price_cents: 98_000,
+    sku: 'CO-MED-009', featured: false, status: 'active',
+    attributes: { tipo: 'Medallón', función: 'Porta-fotos', largo_cadena: '50cm' }
+  },
+  {
+    name: 'Cadena Franco Oro Rosa',
+    category: 'Cadenas Gruesas',
+    description: 'Cadena franco (cuadrada trenzada) de 4mm en oro rosa 18k. Largo: 55cm. Peso: 25g. Acabado pulido brillante. Cierre de caja con doble seguro.',
+    short_description: 'Franco 4mm oro rosa 18k, 55cm',
+    base_price_cents: 195_000, compare_at_price_cents: nil,
+    sku: 'CA-FRA-006', featured: false, status: 'active',
+    attributes: { tipo: 'Franco', grosor: '4mm', peso: '25g', metal: 'Oro Rosa 18k' }
+  },
+  {
+    name: 'Esmeralda Colombiana Talla Octagonal',
+    category: 'Esmeraldas',
+    description: 'Esmeralda colombiana de Chivor, talla octagonal de 1.75ct. Verde medio con excelente brillo. Tratamiento: aceite menor. Certificado CDTEC.',
+    short_description: 'Octagonal 1.75ct Chivor, verde medio brillante',
+    base_price_cents: 320_000, compare_at_price_cents: nil,
+    sku: 'GE-ESM-006', featured: false, status: 'active',
+    attributes: { quilates: '1.75ct', origen: 'Chivor, Colombia', talla: 'Octagonal', certificado: 'CDTEC' }
+  },
+  {
+    name: 'Argollas Bali Grabadas',
+    category: 'Argollas',
+    description: 'Argollas estilo Bali con grabado artesanal de filigrana oxidada. Diámetro 25mm. Plata 925 con baño de oro amarillo 18k. Cierre de click.',
+    short_description: 'Bali filigrana 25mm plata/oro',
+    base_price_cents: 24_000, compare_at_price_cents: 32_000,
+    sku: 'AR-BAL-012', featured: false, status: 'active',
+    attributes: { diámetro: '25mm', estilo: 'Bali filigrana', material: 'Plata 925 baño oro' }
+  },
+  {
+    name: 'Set Madre e Hija Corazón',
+    category: 'Sets y Conjuntos',
+    description: 'Set de 2 colgantes corazón que encajan entre sí. Collar grande (42cm) y collar pequeño (38cm). Diamante compartido en la unión. Oro rosa 14k.',
+    short_description: '2 colgantes corazón que encajan, oro rosa 14k',
+    base_price_cents: 78_000, compare_at_price_cents: nil,
+    sku: 'SE-MAD-005', featured: true, status: 'active',
+    attributes: { piezas: '2 collares', símbolo: 'Corazón dividido', largos: '38/42cm' }
+  },
+
+  # --- PRODUCTOS ADICIONALES ---
+  {
+    name: 'Anillo Esmeralda Oval Vintage',
+    category: 'Anillos de Compromiso',
+    description: 'Anillo vintage con esmeralda oval de 1.8ct colombiana con milgrain y diamantes baguette laterales. Oro amarillo 18k con acabado antiguo. Certificado CDTEC.',
+    short_description: 'Esmeralda oval 1.8ct vintage con diamantes baguette',
+    base_price_cents: 395_000, compare_at_price_cents: nil,
+    sku: 'AN-EOV-014', featured: true, status: 'active',
+    attributes: { piedra: 'Esmeralda', quilates: '1.8ct', estilo: 'Vintage', certificado: 'CDTEC' }
+  },
+  {
+    name: 'Aretes Gota Perla Barroca',
+    category: 'Aretes Colgantes',
+    description: 'Aretes con perlas barrocas naturales de agua dulce (15-18mm) suspendidas de ganchos de oro con diamante. Piezas únicas por la forma irregular de cada perla.',
+    short_description: 'Perlas barrocas naturales con ganchos de diamante',
+    base_price_cents: 68_000, compare_at_price_cents: 82_000,
+    sku: 'AR-GPB-013', featured: false, status: 'active',
+    attributes: { piedra: 'Perla Barroca', tamaño: '15-18mm', tipo: 'Gota' }
+  },
+  {
+    name: 'Brazalete Malla Milanesa',
+    category: 'Brazaletes Rígidos',
+    description: 'Brazalete de malla milanesa tejida a mano en oro amarillo 18k. Ancho: 15mm. Cierre magnético oculto. Flexibilidad y brillo excepcionales.',
+    short_description: 'Malla milanesa tejida a mano en oro 18k',
+    base_price_cents: 145_000, compare_at_price_cents: nil,
+    sku: 'PU-MML-010', featured: false, status: 'active',
+    attributes: { tipo: 'Malla Milanesa', ancho: '15mm', cierre: 'Magnético' }
+  },
+  {
+    name: 'Collar Riviera Esmeraldas Graduadas',
+    category: 'Collares Largos',
+    description: 'Collar riviera con 25 esmeraldas colombianas graduadas de 3mm a 6mm. Total: 12ct. Engaste de 4 garras continuo en oro blanco 18k. Pieza de colección.',
+    short_description: 'Riviera 25 esmeraldas graduadas, 12ct total',
+    base_price_cents: 1_250_000, compare_at_price_cents: nil,
+    sku: 'CO-RIV-010', featured: true, status: 'active',
+    attributes: { piedra: 'Esmeralda', quilates: '12ct total', piezas: '25 esmeraldas', origen: 'Colombia' }
+  },
+  {
+    name: 'Studs Trebol Esmeralda',
+    category: 'Studs',
+    description: 'Studs en forma de trébol de cuatro hojas con esmeraldas talla pera. Cada arete tiene 4 esmeraldas (0.6ct total por par). Oro amarillo 18k. Símbolo de suerte.',
+    short_description: 'Trébol con 4 esmeraldas por arete, oro 18k',
+    base_price_cents: 56_000, compare_at_price_cents: nil,
+    sku: 'AR-TRE-014', featured: false, status: 'active',
+    attributes: { piedra: 'Esmeralda', quilates: '0.6ct total', diseño: 'Trébol' }
+  },
+  {
+    name: 'Cadena Bizantina Oro Macizo',
+    category: 'Cadenas Gruesas',
+    description: 'Cadena bizantina artesanal de 5mm en oro amarillo 18k macizo. Cada eslabón tejido a mano. Largo: 50cm. Peso: 38g. Broche de caja con doble seguro.',
+    short_description: 'Bizantina 5mm oro 18k macizo, 50cm, 38g',
+    base_price_cents: 285_000, compare_at_price_cents: nil,
+    sku: 'CA-BIZ-007', featured: false, status: 'active',
+    attributes: { tipo: 'Bizantina', grosor: '5mm', peso: '38g' }
+  },
+  {
+    name: 'Diamante Princesa 0.75ct',
+    category: 'Diamantes',
+    description: 'Diamante natural talla princesa de 0.75ct. Color: H, Claridad: VVS2, Corte: Muy Bueno. Certificado IGI. Ideal para engaste en anillo solitario.',
+    short_description: 'Princesa 0.75ct H/VVS2 certificado IGI',
+    base_price_cents: 420_000, compare_at_price_cents: nil,
+    sku: 'GE-DPR-007', featured: false, status: 'active',
+    attributes: { quilates: '0.75ct', color: 'H', claridad: 'VVS2', corte: 'Muy Bueno', certificado: 'IGI' }
+  },
+  {
+    name: 'Gargantilla Choker Perlas Akoya',
+    category: 'Gargantillas',
+    description: 'Gargantilla de tres vueltas con perlas Akoya de 5.5mm intercaladas con esferas de oro. Cierre decorativo de mariposa con diamante. Largo: 35cm.',
+    short_description: 'Triple vuelta perlas Akoya 5.5mm con oro',
+    base_price_cents: 125_000, compare_at_price_cents: 148_000,
+    sku: 'CO-GAP-011', featured: false, status: 'active',
+    attributes: { piedra: 'Perla Akoya', tamaño: '5.5mm', vueltas: 3 }
+  },
+  {
+    name: 'Pulsera Esclava ID Oro',
+    category: 'Pulseras de Cadena',
+    description: 'Pulsera esclava con placa para grabado personalizado. Cadena curb de 4mm. Oro amarillo 18k. Largo: 19cm. Incluye grabado de hasta 15 caracteres.',
+    short_description: 'Esclava personalizable con grabado, oro 18k',
+    base_price_cents: 78_000, compare_at_price_cents: 92_000,
+    sku: 'PU-ESC-011', featured: false, status: 'active',
+    attributes: { tipo: 'Esclava ID', grabado: 'Incluido (15 caracteres)', grosor: '4mm' }
+  },
+  {
+    name: 'Anillo Cluster Zafiros Multicolor',
+    category: 'Anillos de Diseñador',
+    description: 'Anillo cluster con zafiros en tonos rosa, azul, amarillo y naranja, creando un efecto arcoíris. 12 zafiros (2.4ct total) rodeados de diamantes. Oro blanco 18k.',
+    short_description: 'Cluster zafiros multicolor 2.4ct con diamantes',
+    base_price_cents: 185_000, compare_at_price_cents: nil,
+    sku: 'AN-CLZ-015', featured: false, status: 'active',
+    attributes: { piedra: 'Zafiro Multicolor', quilates: '2.4ct total', piezas: '12 zafiros' }
+  },
+  {
+    name: 'Aretes Huggie Diamantes Pavé',
+    category: 'Argollas',
+    description: 'Argollas huggie de 14mm completamente pavé de diamantes. 0.8ct total por par. Oro blanco 18k. Cierre click seguro. Brillo 360°.',
+    short_description: 'Huggies full pavé diamantes 0.8ct, oro blanco',
+    base_price_cents: 95_000, compare_at_price_cents: nil,
+    sku: 'AR-HDP-015', featured: true, status: 'active',
+    attributes: { piedra: 'Diamante', quilates: '0.8ct total', diámetro: '14mm' }
+  },
+  {
+    name: 'Set Quinceañera Rosa',
+    category: 'Sets y Conjuntos',
+    description: 'Set de quinceañera: tiara con cristales Swarovski, aretes gota, collar con colgante de corazón y pulsera. Todo en oro rosa 14k con zirconia cúbica rosa.',
+    short_description: 'Tiara + aretes + collar + pulsera quinceañera',
+    base_price_cents: 145_000, compare_at_price_cents: 178_000,
+    sku: 'SE-QUI-006', featured: false, status: 'active',
+    attributes: { piezas: 'Tiara + Aretes + Collar + Pulsera', ocasión: 'Quinceañera', metal: 'Oro Rosa 14k' }
+  },
+  {
+    name: 'Esmeralda Colombiana Gota',
+    category: 'Esmeraldas',
+    description: 'Esmeralda colombiana de Coscuez, talla gota de 3.15ct. Verde profundo con saturación excepcional. Mínimas inclusiones naturales tipo jardín. Certificado GIA.',
+    short_description: 'Gota 3.15ct Coscuez, verde profundo, GIA',
+    base_price_cents: 680_000, compare_at_price_cents: nil,
+    sku: 'GE-ESG-008', featured: true, status: 'active',
+    attributes: { quilates: '3.15ct', origen: 'Coscuez, Colombia', talla: 'Gota', certificado: 'GIA' }
+  },
+  {
+    name: 'Colgante Corazón Llave',
+    category: 'Colgantes',
+    description: 'Colgante en forma de llave con corazón superior pavé de diamantes (0.25ct). Cadena cable fina de 42cm. Oro rosa 18k. Simbolismo romántico atemporal.',
+    short_description: 'Llave con corazón diamantes 0.25ct, oro rosa',
+    base_price_cents: 48_000, compare_at_price_cents: 58_000,
+    sku: 'CO-CLL-012', featured: false, status: 'active',
+    attributes: { piedra: 'Diamante', quilates: '0.25ct', diseño: 'Llave + Corazón' }
+  },
+  {
+    name: 'Alianza Bicolor Trenzada',
+    category: 'Alianzas de Boda',
+    description: 'Alianza de boda bicolor con trenzado de oro amarillo y oro blanco 18k. Acabado satinado con bordes pulidos. Ancho: 5mm. Comfort-fit interior.',
+    short_description: 'Trenzado bicolor oro amarillo/blanco 18k, 5mm',
+    base_price_cents: 62_000, compare_at_price_cents: nil,
+    sku: 'AN-ABT-016', featured: false, status: 'active',
+    attributes: { ancho: '5mm', acabado: 'Satinado + Pulido', estilo: 'Bicolor trenzado' }
+  },
+
+  # --- ESMERALDAS (más productos) ---
+  {
+    name: 'Esmeralda Colombiana Talla Esmeralda',
+    category: 'Esmeraldas',
+    description: 'Esmeralda natural colombiana de Muzo, talla esmeralda clásica de 2.80ct. Color verde medio-oscuro con saturación excepcional. Inclusiones tipo jardín mínimas. Certificado GRS.',
+    short_description: 'Talla esmeralda 2.80ct Muzo, verde oscuro GRS',
+    base_price_cents: 560_000, compare_at_price_cents: nil,
+    sku: 'GE-ETE-009', featured: true, status: 'active',
+    attributes: { quilates: '2.80ct', origen: 'Muzo, Colombia', talla: 'Esmeralda', certificado: 'GRS' }
+  },
+  {
+    name: 'Esmeralda Colombiana Redonda',
+    category: 'Esmeraldas',
+    description: 'Esmeralda colombiana talla redonda brillante de 1.45ct. Color verde vivo con excelente brillo. Origen Coscuez. Tratamiento: aceite menor. Certificado CDTEC.',
+    short_description: 'Redonda 1.45ct Coscuez, verde vivo CDTEC',
+    base_price_cents: 245_000, compare_at_price_cents: nil,
+    sku: 'GE-ERD-010', featured: false, status: 'active',
+    attributes: { quilates: '1.45ct', origen: 'Coscuez, Colombia', talla: 'Redonda', certificado: 'CDTEC' }
+  },
+  {
+    name: 'Par Esmeraldas Calibradas Oval',
+    category: 'Esmeraldas',
+    description: 'Par de esmeraldas colombianas calibradas talla oval, 1.10ct cada una (2.20ct total). Color y saturación uniformes. Ideales para aretes. Certificado Gübelin.',
+    short_description: 'Par oval calibrado 2.20ct total, Gübelin',
+    base_price_cents: 380_000, compare_at_price_cents: nil,
+    sku: 'GE-EPO-011', featured: false, status: 'active',
+    attributes: { quilates: '2.20ct total (1.10ct c/u)', origen: 'Colombia', talla: 'Oval', certificado: 'Gübelin' }
+  },
+  {
+    name: 'Esmeralda Trapiche Natural',
+    category: 'Esmeraldas',
+    description: 'Rarísima esmeralda trapiche colombiana de 3.50ct con patrón de estrella de seis rayos natural. Fenómeno único de las minas de Muzo. Pieza de colección certificada GIA.',
+    short_description: 'Trapiche 3.50ct patrón estrella, pieza única GIA',
+    base_price_cents: 1_200_000, compare_at_price_cents: nil,
+    sku: 'GE-ETR-012', featured: true, status: 'active',
+    attributes: { quilates: '3.50ct', origen: 'Muzo, Colombia', tipo: 'Trapiche', certificado: 'GIA' }
+  },
+  {
+    name: 'Lote 3 Esmeraldas Pequeñas',
+    category: 'Esmeraldas',
+    description: 'Lote de 3 esmeraldas colombianas redondas de 4mm cada una (~0.75ct total). Color verde intenso uniforme. Perfectas para joyería personalizada o engaste en piezas múltiples.',
+    short_description: '3 redondas 4mm (~0.75ct total) verde intenso',
+    base_price_cents: 95_000, compare_at_price_cents: 115_000,
+    sku: 'GE-ELT-013', featured: false, status: 'active',
+    attributes: { quilates: '~0.75ct total', piezas: 3, tamaño: '4mm c/u', origen: 'Colombia' }
+  },
+
+  # --- DIAMANTES (más productos) ---
+  {
+    name: 'Diamante Oval 1.50ct',
+    category: 'Diamantes',
+    description: 'Diamante natural talla oval de 1.50ct. Color: E, Claridad: VS2, Corte: Excelente. Proporciones ideales con efecto "bowtie" mínimo. Certificado GIA.',
+    short_description: 'Oval 1.50ct E/VS2 Excelente GIA',
+    base_price_cents: 1_100_000, compare_at_price_cents: nil,
+    sku: 'GE-DOV-014', featured: false, status: 'active',
+    attributes: { quilates: '1.50ct', color: 'E', claridad: 'VS2', talla: 'Oval', certificado: 'GIA' }
+  },
+  {
+    name: 'Diamante Talla Cojín 0.90ct',
+    category: 'Diamantes',
+    description: 'Diamante natural talla cojín modificada de 0.90ct. Color: F, Claridad: VVS1, con efecto de "fuego" excepcional. Certificado HRD Amberes.',
+    short_description: 'Cojín 0.90ct F/VVS1 HRD Amberes',
+    base_price_cents: 680_000, compare_at_price_cents: nil,
+    sku: 'GE-DCJ-015', featured: false, status: 'active',
+    attributes: { quilates: '0.90ct', color: 'F', claridad: 'VVS1', talla: 'Cojín', certificado: 'HRD' }
+  },
+  {
+    name: 'Par Diamantes Redondos 0.50ct',
+    category: 'Diamantes',
+    description: 'Par de diamantes naturales redondos calibrados de 0.25ct cada uno (0.50ct total). Color: G, Claridad: VS1. Ideales para studs. Certificado IGI.',
+    short_description: 'Par redondos 0.50ct total G/VS1 IGI',
+    base_price_cents: 320_000, compare_at_price_cents: nil,
+    sku: 'GE-DPR-016', featured: false, status: 'active',
+    attributes: { quilates: '0.50ct total', color: 'G', claridad: 'VS1', certificado: 'IGI' }
+  },
+
+  # --- COLLARES LARGOS (más productos) ---
+  {
+    name: 'Collar Opera Perlas Multicolor',
+    category: 'Collares Largos',
+    description: 'Collar largo estilo ópera (80cm) con perlas de agua dulce multicolor: blancas, rosadas, lavanda y melocotón. 8-9mm. Broche de plata 925 con zirconia.',
+    short_description: 'Ópera 80cm perlas multicolor 8-9mm',
+    base_price_cents: 68_000, compare_at_price_cents: 85_000,
+    sku: 'CO-OPE-013', featured: false, status: 'active',
+    attributes: { piedra: 'Perla de Agua Dulce', tamaño: '8-9mm', largo: '80cm', estilo: 'Ópera' }
+  },
+  {
+    name: 'Collar Sautoir Borlas Oro',
+    category: 'Collares Largos',
+    description: 'Collar sautoir largo (90cm) con cadena fina terminada en borlas de cadenas de oro. Diseño años 20 contemporáneo. Oro amarillo 18k. Peso: 15g.',
+    short_description: 'Sautoir 90cm con borlas de cadena, oro 18k',
+    base_price_cents: 145_000, compare_at_price_cents: nil,
+    sku: 'CO-SAU-014', featured: false, status: 'active',
+    attributes: { tipo: 'Sautoir', largo: '90cm', peso: '15g' }
+  },
+  {
+    name: 'Collar Rosario Esmeraldas',
+    category: 'Collares Largos',
+    description: 'Collar estilo rosario con esmeraldas facetadas de 3mm engarzadas en cadena de oro. 48 esmeraldas (~4ct total). Largo: 65cm. Oro amarillo 18k.',
+    short_description: 'Rosario 48 esmeraldas facetadas, 65cm oro 18k',
+    base_price_cents: 285_000, compare_at_price_cents: nil,
+    sku: 'CO-ROS-015', featured: true, status: 'active',
+    attributes: { piedra: 'Esmeralda', quilates: '~4ct total', piezas: 48, largo: '65cm' }
+  },
+
+  # --- BRAZALETES RÍGIDOS (más productos) ---
+  {
+    name: 'Brazalete Caña Bambú',
+    category: 'Brazaletes Rígidos',
+    description: 'Brazalete rígido con textura de bambú tallada a mano. Bisagra lateral con cierre de seguridad. Oro amarillo 18k. Diámetro interior: 60mm.',
+    short_description: 'Textura bambú tallado a mano, oro 18k',
+    base_price_cents: 115_000, compare_at_price_cents: nil,
+    sku: 'PU-BCB-012', featured: false, status: 'active',
+    attributes: { diseño: 'Bambú', acabado: 'Tallado a mano', diámetro: '60mm' }
+  },
+  {
+    name: 'Brazalete Abierto Esmeraldas',
+    category: 'Brazaletes Rígidos',
+    description: 'Brazalete abierto tipo cuff con terminaciones de esmeraldas talla cabujón (0.8ct total). Cuerpo torneado en oro amarillo 18k. Ajustable.',
+    short_description: 'Cuff abierto con esmeraldas cabujón, oro 18k',
+    base_price_cents: 165_000, compare_at_price_cents: 195_000,
+    sku: 'PU-BAE-013', featured: true, status: 'active',
+    attributes: { piedra: 'Esmeralda Cabujón', quilates: '0.8ct total', tipo: 'Cuff abierto' }
+  },
+
+  # --- MANILLAS CON GEMAS (más productos) ---
+  {
+    name: 'Manilla Multicolor Zafiros Rainbow',
+    category: 'Manillas con Gemas',
+    description: 'Manilla con zafiros multicolor (rosa, azul, amarillo, naranja, verde) en degradé arcoíris. 22 zafiros (5.5ct total). Oro blanco 18k.',
+    short_description: 'Rainbow 22 zafiros multicolor 5.5ct, oro blanco',
+    base_price_cents: 425_000, compare_at_price_cents: nil,
+    sku: 'PU-MRB-014', featured: false, status: 'active',
+    attributes: { piedra: 'Zafiro Multicolor', quilates: '5.5ct total', piezas: 22 }
+  },
+  {
+    name: 'Manilla Turquesa y Oro',
+    category: 'Manillas con Gemas',
+    description: 'Manilla con cabujones de turquesa natural de Arizona intercalados con eslabones de oro grabados. 9 turquesas de 6mm. Oro amarillo 18k.',
+    short_description: 'Turquesa natural Arizona con eslabones oro 18k',
+    base_price_cents: 88_000, compare_at_price_cents: nil,
+    sku: 'PU-MTO-015', featured: false, status: 'active',
+    attributes: { piedra: 'Turquesa Natural', tamaño: '6mm', piezas: 9, origen: 'Arizona' }
+  },
+
+  # --- CADENAS FINAS (más productos) ---
+  {
+    name: 'Cadena Serpentina Ultra Fina',
+    category: 'Cadenas Finas',
+    description: 'Cadena serpentina (snake chain) de 0.8mm, ultra delicada con caída fluida. Largo: 42cm con extensor de 5cm. Oro amarillo 18k. Brillo líquido.',
+    short_description: 'Serpentina 0.8mm, 42cm oro 18k ultra fina',
+    base_price_cents: 28_000, compare_at_price_cents: nil,
+    sku: 'CA-SER-008', featured: false, status: 'active',
+    attributes: { tipo: 'Serpentina', grosor: '0.8mm', largo: '42+5cm' }
+  },
+  {
+    name: 'Cadena Satellite Bolitas',
+    category: 'Cadenas Finas',
+    description: 'Cadena satellite con bolitas decorativas cada 2cm sobre cadena cable ultra fina. Largo: 45cm. Oro rosa 18k. Efecto delicado y moderno.',
+    short_description: 'Satellite bolitas cada 2cm, 45cm oro rosa',
+    base_price_cents: 32_000, compare_at_price_cents: 38_000,
+    sku: 'CA-SAT-009', featured: false, status: 'active',
+    attributes: { tipo: 'Satellite', largo: '45cm', metal: 'Oro Rosa 18k' }
+  },
+
+  # --- PIEDRAS SEMI-PRECIOSAS (más productos) ---
+  {
+    name: 'Tanzanita Oval 2.80ct',
+    category: 'Piedras Semi-preciosas',
+    description: 'Tanzanita natural talla oval de 2.80ct. Color violeta-azul intenso con pleocroísmo visible. Origen: Tanzania. Certificado GIA. Piedra cada vez más rara.',
+    short_description: 'Oval 2.80ct violeta-azul intenso, GIA',
+    base_price_cents: 280_000, compare_at_price_cents: nil,
+    sku: 'GE-TAN-017', featured: false, status: 'active',
+    attributes: { quilates: '2.80ct', color: 'Violeta-Azul', origen: 'Tanzania', certificado: 'GIA' }
+  },
+  {
+    name: 'Topacio Imperial Rosa 4.20ct',
+    category: 'Piedras Semi-preciosas',
+    description: 'Topacio imperial rosa natural, talla cojín de 4.20ct. Color rosa salmón intenso natural sin tratamiento. Origen: Ouro Preto, Brasil. Certificado AIGS.',
+    short_description: 'Cojín 4.20ct rosa natural, Ouro Preto, AIGS',
+    base_price_cents: 185_000, compare_at_price_cents: nil,
+    sku: 'GE-TIR-018', featured: false, status: 'active',
+    attributes: { quilates: '4.20ct', color: 'Rosa Salmón', origen: 'Brasil', certificado: 'AIGS' }
   }
 ]
 
@@ -903,7 +1362,7 @@ products.each_with_index do |product, idx|
   urls = JEWELRY_IMAGES[cat_type] || JEWELRY_IMAGES[:necklaces]
 
   # Give each product 1-2 images from its category pool
-  image_count = [1, 2].sample
+  image_count = [2, 3].sample
   image_count.times do |img_idx|
     url = urls[(idx + img_idx) % urls.size]
     if attach_image_to_product(product, store, url, position: img_idx)

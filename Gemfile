@@ -40,6 +40,9 @@ gem "aws-sdk-s3", require: false
 # CORS
 gem "rack-cors"
 
+# Rate limiting
+gem "rack-attack"
+
 # API Documentation
 gem "rswag-api"
 gem "rswag-ui"

@@ -21,4 +21,9 @@ class ProductListSerializer
   attribute :variants_count do |product|
     product.variants.size
   end
+
+  attribute :primary_image_url do |product|
+    primary = product.product_images.min_by(&:position)
+    primary&.image_url
+  end
 end

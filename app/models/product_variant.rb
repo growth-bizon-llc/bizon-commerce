@@ -8,6 +8,7 @@ class ProductVariant < ApplicationRecord
   belongs_to :product
 
   validates :name, presence: true, length: { maximum: 255 }
+  validates :sku, uniqueness: { scope: :store_id }, allow_blank: true
   validates :price_cents, numericality: { greater_than_or_equal_to: 0 }
   validates :compare_at_price_cents, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
   validates :quantity, numericality: { greater_than_or_equal_to: 0 }

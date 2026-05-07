@@ -8,7 +8,7 @@ module Api
           products = policy_scope(Product).includes(:category, :variants, :product_images).ordered
           products = products.where(status: params[:status]) if params[:status].present?
           products = products.where(category_id: params[:category_id]) if params[:category_id].present?
-          products = products.where("name ILIKE ?", "%#{params[:q]}%") if params[:q].present?
+          products = products.where("name ILIKE ?", "%#{ActiveRecord::Base.sanitize_sql_like(params[:q])}%") if params[:q].present?
           products = products.featured if params[:featured] == 'true'
 
           pagy, records = pagy(products, limit: (params[:per_page] || 20).to_i.clamp(1, 100))

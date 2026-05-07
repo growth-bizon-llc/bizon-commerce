@@ -5,7 +5,7 @@ module Api
         def index
           products = Product.active.includes(:category, :variants, :product_images).ordered
           products = products.where(category_id: params[:category_id]) if params[:category_id].present?
-          products = products.where("name ILIKE ?", "%#{params[:q]}%") if params[:q].present?
+          products = products.where("name ILIKE ?", "%#{ActiveRecord::Base.sanitize_sql_like(params[:q])}%") if params[:q].present?
           products = products.featured if params[:featured] == 'true'
           products = products.in_stock if params[:in_stock] == 'true'
 

@@ -81,17 +81,41 @@ RSpec.describe 'Api::V1::Storefront::Orders', type: :request do
   end
 
   describe 'GET /api/v1/storefront/orders/:order_number' do
-    let!(:order) { create(:order, store: store, order_number: '#1001') }
+    let(:customer) { create(:customer, store: store) }
+    let(:customer_token) do
+      JWT.encode(
+        { customer_id: customer.id, exp: 24.hours.from_now.to_i },
+        Rails.application.secret_key_base, 'HS256'
+      )
+    end
+    let(:customer_headers) { headers.merge('X-Customer-Token' => customer_token) }
+    let!(:order) { create(:order, store: store, order_number: '#1001', customer: customer) }
 
-    it 'returns order by order number' do
-      get '/api/v1/storefront/orders/1001', headers: headers, as: :json
+    it 'returns order by order number for authenticated customer' do
+      get '/api/v1/storefront/orders/1001', headers: customer_headers, as: :json
 
       expect(response).to have_http_status(:ok)
       expect(json_response['order_number']).to eq('#1001')
     end
 
+    it 'returns 401 without customer authentication' do
+      get '/api/v1/storefront/orders/1001', headers: headers, as: :json
+      expect(response).to have_http_status(:unauthorized)
+    end
+
+    it 'returns 404 when order belongs to another customer' do
+      other_customer = create(:customer, store: store)
+      other_token = JWT.encode(
+        { customer_id: other_customer.id, exp: 24.hours.from_now.to_i },
+        Rails.application.secret_key_base, 'HS256'
+      )
+      get '/api/v1/storefront/orders/1001',
+          headers: headers.merge('X-Customer-Token' => other_token), as: :json
+      expect(response).to have_http_status(:not_found)
+    end
+
     it 'returns 404 for non-existent order' do
-      get '/api/v1/storefront/orders/9999', headers: headers, as: :json
+      get '/api/v1/storefront/orders/9999', headers: customer_headers, as: :json
       expect(response).to have_http_status(:not_found)
     end
   end

@@ -18,6 +18,14 @@ RSpec.describe 'Api::V1::Admin::Categories', type: :request do
       expect(response).to have_http_status(:ok)
       expect(json_response['categories'].size).to eq(2)
     end
+
+    it 'filters categories by search query' do
+      get '/api/v1/admin/categories?q=Electron', headers: headers, as: :json
+
+      expect(response).to have_http_status(:ok)
+      expect(json_response['categories'].size).to eq(1)
+      expect(json_response['categories'].first['name']).to eq('Electronics')
+    end
   end
 
   describe 'GET /api/v1/admin/categories/:id' do

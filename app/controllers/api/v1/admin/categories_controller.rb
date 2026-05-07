@@ -5,7 +5,10 @@ module Api
         before_action :set_category, only: [:show, :update, :destroy]
 
         def index
-          categories = policy_scope(Category).ordered
+          categories = policy_scope(Category).includes(:children, :products).ordered
+          if params[:q].present?
+            categories = categories.where("name ILIKE ?", "%#{ActiveRecord::Base.sanitize_sql_like(params[:q])}%")
+          end
           pagy, records = pagy(categories, limit: (params[:per_page] || 20).to_i.clamp(1, 100))
           render json: {
             categories: CategorySerializer.new(records).serializable_hash,
