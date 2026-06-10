@@ -36,10 +36,21 @@ Rails.application.routes.draw do
           delete :clear
         end
 
+        resource :store, only: [:show]
+
         resources :orders, only: [:create, :show], param: :order_number
         resource :session, only: [:create]
-        resources :customers, only: [:create]
+        resources :customers, only: [:create, :show, :destroy] do
+          get :export_data, on: :member
+        end
+
+        resource :checkout, only: [] do
+          post 'sessions', to: 'checkout_sessions#create'
+          get 'sessions/:id/status', to: 'checkout_sessions#status', as: :session_status
+        end
       end
     end
   end
+
+  post '/webhooks/stripe', to: 'webhooks/stripe#create'
 end
