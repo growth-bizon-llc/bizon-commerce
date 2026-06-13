@@ -87,7 +87,7 @@ RSpec.describe 'Api::V1::Storefront::CheckoutSessions', type: :request do
 
     it 'fails without cart token' do
       post '/api/v1/storefront/checkout/sessions',
-           params: { email: 'test@test.com' },
+           params: { email: 'test@test.com', terms_accepted: true },
            headers: headers, as: :json
 
       expect(response).to have_http_status(:not_found)
