@@ -13,6 +13,7 @@ class Order < ApplicationRecord
   validates :order_number, presence: true, uniqueness: true
   validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :subtotal_cents, :tax_cents, :total_cents, numericality: { greater_than_or_equal_to: 0 }
+  validates :refund_amount_cents, numericality: { greater_than_or_equal_to: 0 }
   validates :payment_status, inclusion: { in: %w[pending paid failed refunded] }
 
   before_validation :generate_order_number, on: :create

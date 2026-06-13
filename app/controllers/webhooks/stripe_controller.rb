@@ -48,6 +48,7 @@ module Webhooks
         return unless order
         return if order.paid?
         return if order.cancelled?
+        return if order.refunded?
 
         order.update!(
           stripe_session_id: session.id,
