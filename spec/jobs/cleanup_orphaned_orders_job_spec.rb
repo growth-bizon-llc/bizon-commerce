@@ -4,7 +4,7 @@ RSpec.describe CleanupOrphanedOrdersJob, type: :job do
   let(:store) { create(:store) }
 
   it 'cancels old pending orders' do
-    old_order = create(:order, store: store, status: 'pending', created_at: 25.hours.ago)
+    old_order = create(:order, store: store, status: 'pending', created_at: 49.hours.ago)
     recent_order = create(:order, store: store, status: 'pending', created_at: 1.hour.ago)
 
     described_class.perform_now
@@ -14,7 +14,7 @@ RSpec.describe CleanupOrphanedOrdersJob, type: :job do
   end
 
   it 'cancels old confirmed orders' do
-    old_confirmed = create(:order, store: store, status: 'confirmed', created_at: 25.hours.ago)
+    old_confirmed = create(:order, store: store, status: 'confirmed', created_at: 49.hours.ago)
 
     described_class.perform_now
 
@@ -22,10 +22,16 @@ RSpec.describe CleanupOrphanedOrdersJob, type: :job do
   end
 
   it 'does not cancel paid orders' do
-    paid_order = create(:order, :paid, store: store, created_at: 25.hours.ago)
+    paid_order = create(:order, :paid, store: store, created_at: 49.hours.ago)
 
     described_class.perform_now
 
     expect(paid_order.reload.status).to eq('paid')
+  end
+
+  it 'does not cancel orders with paid payment_status' do
+    order_paid_status = create(:order, store: store, status: 'confirmed', payment_status: 'paid', created_at: 49.hours.ago)
+    described_class.perform_now
+    expect(order_paid_status.reload.status).to eq('confirmed')
   end
 end
