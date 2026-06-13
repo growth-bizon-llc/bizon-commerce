@@ -109,6 +109,19 @@ RSpec.describe Orders::CreateFromCartService do
       end
     end
 
+    context 'with mixed currencies' do
+      it 'fails with a currency mismatch error' do
+        other_product = create(:product, :active, store: store, base_price_cents: 5000, sku: 'TST-002')
+        create(:cart_item, cart: cart, product: other_product, unit_price_cents: 5000, unit_price_currency: 'EUR', quantity: 1)
+
+        service = described_class.new(cart: cart, email: 'test@test.com')
+        service.call
+
+        expect(service).not_to be_success
+        expect(service.errors.first).to include("All items must use the same currency")
+      end
+    end
+
     context 'with variant items' do
       it 'creates order items with variant info' do
         variant = create(:product_variant, product: product, store: store, name: 'Red / XL', sku: 'VAR-001', price_cents: 3000)
