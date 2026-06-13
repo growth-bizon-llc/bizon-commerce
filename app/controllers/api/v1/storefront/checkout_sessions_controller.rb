@@ -5,6 +5,13 @@ module Api
         before_action :ensure_cart, only: [:create]
 
         def create
+          response.set_header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+          response.set_header('Pragma', 'no-cache')
+
+          unless ActiveModel::Type::Boolean.new.cast(params[:terms_accepted])
+            return render json: { errors: ["You must accept the terms and conditions"] }, status: :unprocessable_entity
+          end
+
           service = Orders::CreateFromCartService.new(
             cart: @cart,
             email: params[:email],
@@ -24,9 +31,10 @@ module Api
           begin
             checkout_session = create_stripe_session(order)
           rescue Stripe::StripeError => e
+            Rails.logger.error("Stripe error creating checkout session for order #{order.id}: #{e.class} - #{e.message}")
             order.cancel! if order.may_cancel?
             order.save!
-            return render json: { errors: ["Payment service unavailable: #{e.message}"] }, status: :service_unavailable
+            return render json: { errors: ["Payment service is temporarily unavailable. Please try again."] }, status: :service_unavailable
           end
 
           order.update!(stripe_session_id: checkout_session.id)
@@ -48,6 +56,9 @@ module Api
           }
         rescue ActiveRecord::RecordNotFound
           render json: { error: "Session not found" }, status: :not_found
+        rescue Stripe::StripeError => e
+          Rails.logger.error("Stripe error retrieving session #{params[:id]}: #{e.class} - #{e.message}")
+          render json: { error: "Unable to retrieve payment status" }, status: :service_unavailable
         end
 
         private
