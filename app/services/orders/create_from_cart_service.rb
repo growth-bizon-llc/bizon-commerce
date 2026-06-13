@@ -35,11 +35,36 @@ module Orders
       end
 
       @errors << "Email is required" if @email.blank?
+
+      validate_prices!
+      validate_single_currency!
+    end
+
+    def validate_single_currency!
+      currencies = @cart.cart_items.pluck(:unit_price_currency).uniq
+      if currencies.size > 1
+        @errors << "All items must use the same currency. Found: #{currencies.join(', ')}"
+      end
+    end
+
+    def validate_prices!
+      @cart.cart_items.includes(:product, :product_variant).each do |cart_item|
+        current_price = if cart_item.product_variant
+                          cart_item.product_variant.price_cents
+                        else
+                          cart_item.product.base_price_cents
+                        end
+
+        if cart_item.unit_price_cents != current_price
+          @errors << "Price has changed for #{cart_item.product.name}. Please refresh your cart."
+          return
+        end
+      end
     end
 
     def create_order
       subtotal = @cart.total
-      tax = (subtotal * @cart.store.tax_rate / 100.0).round
+      tax = (BigDecimal(subtotal.to_s) * BigDecimal(@cart.store.tax_rate.to_s) / BigDecimal('100')).round
       total = subtotal + tax
 
       Order.create!(
