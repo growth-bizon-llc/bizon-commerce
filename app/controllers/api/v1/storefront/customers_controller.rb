@@ -32,17 +32,19 @@ module Api
 
           # Anonymize PII in all orders
           anonymized_address = { 'first_name' => 'Redacted', 'last_name' => 'Redacted', 'street' => 'Redacted', 'city' => 'Redacted', 'state' => 'Redacted', 'country' => 'Redacted' }
+          anon_hash = Digest::SHA256.hexdigest(customer.id.to_s)[0..7]
           customer.orders.find_each do |order|
             order.update_columns(
-              email: "deleted-#{customer.id}@deleted.local",
+              email: "deleted-#{anon_hash}@deleted.local",
               shipping_address: anonymized_address,
               billing_address: anonymized_address,
-              notes: nil
+              notes: nil,
+              metadata: {}
             )
           end
 
           customer.update!(
-            email: "deleted-#{customer.id}@deleted.local",
+            email: "deleted-#{anon_hash}@deleted.local",
             first_name: "Deleted",
             last_name: "User",
             phone: nil,
