@@ -17,7 +17,10 @@ module Webhooks
       begin
         handle_event(event)
       rescue ActiveRecord::RecordNotFound, AASM::InvalidTransition => e
-        Rails.logger.warn("Stripe webhook permanent error: #{e.message}")
+        Rails.logger.warn("Stripe webhook permanent error for event #{event.id}: #{e.class} - #{e.message}")
+      rescue StandardError => e
+        Rails.logger.error("Stripe webhook unexpected error for event #{event.id}: #{e.class} - #{e.message}")
+        Rails.logger.error(e.backtrace&.first(5)&.join("\n"))
       end
 
       head :ok
@@ -26,6 +29,7 @@ module Webhooks
     private
 
     def handle_event(event)
+      Rails.logger.info("Processing Stripe webhook: #{event.type} (#{event.id})")
       case event.type
       when 'checkout.session.completed'
         handle_checkout_completed(event.data.object)
@@ -43,6 +47,7 @@ module Webhooks
         order = Order.unscoped.lock.find_by(id: session.metadata.order_id)
         return unless order
         return if order.paid?
+        return if order.cancelled?
 
         order.update!(
           stripe_session_id: session.id,

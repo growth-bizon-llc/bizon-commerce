@@ -70,6 +70,27 @@ RSpec.describe 'Webhooks::Stripe', type: :request do
         expect(response).to have_http_status(:ok)
       end
 
+      it 'skips checkout completed for cancelled orders' do
+        order.update!(status: 'cancelled', cancelled_at: 1.hour.ago)
+
+        payload, sig_header = stripe_event('checkout.session.completed', {
+          id: 'cs_test_123',
+          payment_intent: 'pi_test_456',
+          metadata: { order_id: order.id, store_id: store.id }
+        })
+
+        post '/webhooks/stripe',
+             params: payload,
+             headers: {
+               'HTTP_STRIPE_SIGNATURE' => sig_header,
+               'CONTENT_TYPE' => 'application/json'
+             }
+
+        expect(response).to have_http_status(:ok)
+        expect(order.reload.status).to eq('cancelled')
+        expect(order.reload.payment_status).to eq('pending')
+      end
+
       it 'handles missing order gracefully' do
         payload, sig_header = stripe_event('checkout.session.completed', {
           id: 'cs_test_123',
