@@ -2,8 +2,6 @@ module Api
   module V1
     module Storefront
       class CheckoutSessionsController < BaseController
-        before_action :ensure_cart, only: [:create]
-
         def create
           response.set_header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
           response.set_header('Pragma', 'no-cache')
@@ -12,40 +10,49 @@ module Api
             return render json: { errors: ["You must accept the terms and conditions"] }, status: :unprocessable_entity
           end
 
-          service = Orders::CreateFromCartService.new(
-            cart: @cart,
-            email: params[:email],
-            customer: current_customer,
-            shipping_address: extract_address(params[:shipping_address]),
-            billing_address: extract_address(params[:billing_address]),
-            notes: params[:notes]
-          )
-          service.call
+          token = request.headers["X-Cart-Token"] || params[:cart_token]
 
-          unless service.success?
-            return render json: { errors: service.errors }, status: :unprocessable_entity
+          Cart.transaction do
+            @cart = Cart.where(store: Current.store).lock.find_by!(token: token, status: 'active')
+
+            service = Orders::CreateFromCartService.new(
+              cart: @cart,
+              email: params[:email],
+              customer: current_customer,
+              shipping_address: extract_address(params[:shipping_address]),
+              billing_address: extract_address(params[:billing_address]),
+              notes: params[:notes]
+            )
+            service.call
+
+            unless service.success?
+              return render json: { errors: service.errors }, status: :unprocessable_entity
+            end
+
+            order = service.result
+
+            begin
+              checkout_session = create_stripe_session(order)
+            rescue Stripe::StripeError => e
+              Rails.logger.error("Stripe error creating checkout session for order #{order.id}: #{e.class} - #{e.message}")
+              order.cancel! if order.may_cancel?
+              order.save!
+              return render json: { errors: ["Payment service is temporarily unavailable. Please try again."] }, status: :service_unavailable
+            end
+
+            order.update!(stripe_session_id: checkout_session.id)
+
+            render json: {
+              client_secret: checkout_session.client_secret,
+              order_number: order.order_number
+            }, status: :created
           end
-
-          order = service.result
-
-          begin
-            checkout_session = create_stripe_session(order)
-          rescue Stripe::StripeError => e
-            Rails.logger.error("Stripe error creating checkout session for order #{order.id}: #{e.class} - #{e.message}")
-            order.cancel! if order.may_cancel?
-            order.save!
-            return render json: { errors: ["Payment service is temporarily unavailable. Please try again."] }, status: :service_unavailable
-          end
-
-          order.update!(stripe_session_id: checkout_session.id)
-
-          render json: {
-            client_secret: checkout_session.client_secret,
-            order_number: order.order_number
-          }, status: :created
         end
 
         def status
+          response.set_header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+          response.set_header('Pragma', 'no-cache')
+
           order = Order.find_by!(stripe_session_id: params[:id], store: Current.store)
           checkout_session = Stripe::Checkout::Session.retrieve(params[:id])
 
@@ -65,7 +72,7 @@ module Api
 
         def ensure_cart
           token = request.headers["X-Cart-Token"] || params[:cart_token]
-          @cart = Cart.where(store: Current.store).lock.find_by!(token: token, status: 'active')
+          @cart = Cart.where(store: Current.store).find_by!(token: token, status: 'active')
         end
 
         def extract_address(addr)
