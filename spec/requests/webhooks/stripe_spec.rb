@@ -171,10 +171,11 @@ RSpec.describe 'Webhooks::Stripe', type: :request do
     context 'charge.refunded' do
       let!(:order) { create(:order, :paid, store: store, stripe_payment_intent_id: 'pi_test_refund') }
 
-      it 'marks order as refunded' do
+      it 'marks order as refunded and stores refund amount' do
         payload, sig_header = stripe_event('charge.refunded', {
           id: 'ch_test_123',
-          payment_intent: 'pi_test_refund'
+          payment_intent: 'pi_test_refund',
+          amount_refunded: 5400
         })
 
         post '/webhooks/stripe',
@@ -188,6 +189,8 @@ RSpec.describe 'Webhooks::Stripe', type: :request do
         order.reload
         expect(order.payment_status).to eq('refunded')
         expect(order.status).to eq('refunded')
+        expect(order.refund_amount_cents).to eq(5400)
+        expect(order.refunded_at).to be_present
       end
     end
 

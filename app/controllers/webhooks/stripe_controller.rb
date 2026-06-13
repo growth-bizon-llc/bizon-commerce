@@ -86,7 +86,11 @@ module Webhooks
         order = Order.unscoped.lock.find_by(stripe_payment_intent_id: charge.payment_intent)
         return unless order
 
-        order.update!(payment_status: 'refunded')
+        order.update!(
+          payment_status: 'refunded',
+          refund_amount_cents: charge.amount_refunded,
+          refunded_at: Time.current
+        )
         order.refund! if order.may_refund?
         order.save!
       end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_07_025046) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_13_202942) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -91,6 +91,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_07_025046) do
   create_table "customers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.boolean "accepts_marketing", default: false
     t.datetime "created_at", null: false
+    t.datetime "deleted_at"
     t.string "email", null: false
     t.string "first_name"
     t.string "last_name"
@@ -144,11 +145,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_07_025046) do
     t.text "notes"
     t.string "order_number", null: false
     t.datetime "paid_at"
+    t.string "payment_status", default: "pending", null: false
     t.datetime "placed_at"
+    t.integer "refund_amount_cents", default: 0
+    t.datetime "refunded_at"
     t.datetime "shipped_at"
     t.jsonb "shipping_address", default: {}
     t.string "status", default: "pending", null: false
     t.uuid "store_id", null: false
+    t.string "stripe_payment_intent_id"
+    t.string "stripe_session_id"
     t.integer "subtotal_cents", default: 0, null: false
     t.string "subtotal_currency", default: "USD"
     t.integer "tax_cents", default: 0, null: false
@@ -160,6 +166,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_07_025046) do
     t.index ["order_number"], name: "index_orders_on_order_number", unique: true
     t.index ["store_id", "status"], name: "index_orders_on_store_id_and_status"
     t.index ["store_id"], name: "index_orders_on_store_id"
+    t.index ["stripe_payment_intent_id"], name: "index_orders_on_stripe_payment_intent_id", unique: true, where: "(stripe_payment_intent_id IS NOT NULL)"
+    t.index ["stripe_session_id"], name: "index_orders_on_stripe_session_id", unique: true, where: "(stripe_session_id IS NOT NULL)"
   end
 
   create_table "product_images", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

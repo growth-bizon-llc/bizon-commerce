@@ -5,6 +5,7 @@ class Order < ApplicationRecord
   monetize :subtotal_cents
   monetize :tax_cents
   monetize :total_cents
+  monetize :refund_amount_cents, allow_nil: true
 
   belongs_to :customer, optional: true
   has_many :order_items, dependent: :destroy
@@ -12,6 +13,7 @@ class Order < ApplicationRecord
   validates :order_number, presence: true, uniqueness: true
   validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :subtotal_cents, :tax_cents, :total_cents, numericality: { greater_than_or_equal_to: 0 }
+  validates :payment_status, inclusion: { in: %w[pending paid failed refunded] }
 
   before_validation :generate_order_number, on: :create
 
@@ -67,6 +69,10 @@ class Order < ApplicationRecord
   end
 
   scope :by_status, ->(status) { where(status: status) }
+
+  def paid?
+    payment_status == 'paid'
+  end
 
   private
 
