@@ -67,6 +67,8 @@ module Webhooks
         order = Order.unscoped.lock.find_by(id: session.metadata.order_id)
         return unless order
         return if order.cancelled?
+        return if order.paid?
+        return if order.refunded?
 
         order.update!(payment_status: 'failed') if order.payment_status == 'pending'
         order.cancel! if order.may_cancel?
@@ -88,11 +90,11 @@ module Webhooks
       Order.transaction do
         order = Order.unscoped.lock.find_by(stripe_payment_intent_id: charge.payment_intent)
         return unless order
+        return if order.payment_status == 'refunded'
 
         order.update!(
           payment_status: 'refunded',
-          refund_amount_cents: charge.amount_refunded,
-          refunded_at: Time.current
+          refund_amount_cents: charge.amount_refunded
         )
         order.refund! if order.may_refund?
         order.save!
