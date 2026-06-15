@@ -54,24 +54,28 @@ module Orders
         product = cart_item.product
         if product.nil? || product.discarded?
           @errors << "Product is no longer available. Please update your cart."
-          return
+          next
         end
         unless product.status == 'active'
           @errors << "#{product.name} is not currently available for purchase."
-          return
+          next
+        end
+        if cart_item.product_variant_id.present? && cart_item.product_variant.nil?
+          @errors << "A selected variant for #{product.name} is no longer available. Please update your cart."
+          next
         end
       end
     end
 
     def validate_stock!
-      @cart.cart_items.includes(:product_variant).each do |cart_item|
+      @cart.cart_items.includes(:product, :product_variant).each do |cart_item|
         variant = cart_item.product_variant
         next unless variant
         next unless variant.respond_to?(:track_inventory) && variant.track_inventory
 
         if variant.quantity < cart_item.quantity
           @errors << "Insufficient stock for #{cart_item.product.name}. Only #{variant.quantity} available."
-          return
+          next
         end
       end
     end
