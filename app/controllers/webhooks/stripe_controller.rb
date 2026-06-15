@@ -66,7 +66,9 @@ module Webhooks
       Order.transaction do
         order = Order.unscoped.lock.find_by(id: session.metadata.order_id)
         return unless order
+        return if order.cancelled?
 
+        order.update!(payment_status: 'failed') if order.payment_status == 'pending'
         order.cancel! if order.may_cancel?
         order.save!
       end

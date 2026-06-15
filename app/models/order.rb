@@ -65,6 +65,9 @@ class Order < ApplicationRecord
     end
 
     event :refund do
+      before do
+        self.refunded_at = Time.current
+      end
       transitions from: :paid, to: :refunded
     end
   end
