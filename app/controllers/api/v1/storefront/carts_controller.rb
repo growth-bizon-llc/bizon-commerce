@@ -10,10 +10,14 @@ module Api
 
         def add_item
           product = Product.active.find(params[:product_id])
-          variant = params[:variant_id] ? ProductVariant.active.find(params[:variant_id]) : nil
+          variant = params[:variant_id].present? ? ProductVariant.active.find(params[:variant_id]) : nil
 
           if variant && variant.product_id != product.id
             return render json: { error: "Variant does not belong to this product" }, status: :unprocessable_entity
+          end
+
+          if variant.nil? && product.variants.active.any?
+            return render json: { error: "Please select a variant for this product" }, status: :unprocessable_entity
           end
 
           service = Carts::AddItemService.new(
