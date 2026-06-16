@@ -60,8 +60,6 @@ class Order < ApplicationRecord
     event :cancel do
       before do
         self.cancelled_at = Time.current
-      end
-      after do
         restore_inventory!
       end
       transitions from: [:pending, :confirmed], to: :cancelled
@@ -70,8 +68,6 @@ class Order < ApplicationRecord
     event :refund do
       before do
         self.refunded_at = Time.current
-      end
-      after do
         restore_inventory!
       end
       transitions from: :paid, to: :refunded
@@ -87,9 +83,9 @@ class Order < ApplicationRecord
   private
 
   def restore_inventory!
-    order_items.includes(:product, :product_variant).each do |item|
-      variant = item.product_variant
-      product = item.product
+    order_items.each do |item|
+      variant = item.product_variant_id ? ProductVariant.unscoped.find_by(id: item.product_variant_id) : nil
+      product = Product.unscoped.find_by(id: item.product_id)
       next unless product
 
       if variant && !variant.discarded? && variant.track_inventory
