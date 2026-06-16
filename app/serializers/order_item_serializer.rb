@@ -11,4 +11,8 @@ class OrderItemSerializer
   attribute :total do |item|
     { amount: item.total.to_f, currency: item.total_currency }
   end
+
+  attribute :primary_image_url do |item|
+    item.product&.product_images&.ordered&.first&.image_url
+  end
 end
