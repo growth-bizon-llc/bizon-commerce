@@ -56,10 +56,14 @@ gem "sidekiq"
 # Soft delete
 gem "discard"
 
+# Payments
+gem "stripe"
+
 # Password hashing for customers
 gem "bcrypt", "~> 3.1.7"
 
 group :development, :test do
+  gem "dotenv-rails"
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
   gem "bundler-audit", require: false
   gem "brakeman", require: false

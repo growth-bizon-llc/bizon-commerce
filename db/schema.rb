@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_13_202942) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_16_002020) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -159,6 +159,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_13_202942) do
     t.string "subtotal_currency", default: "USD"
     t.integer "tax_cents", default: 0, null: false
     t.string "tax_currency", default: "USD"
+    t.boolean "terms_accepted"
+    t.datetime "terms_accepted_at"
     t.integer "total_cents", default: 0, null: false
     t.string "total_currency", default: "USD"
     t.datetime "updated_at", null: false

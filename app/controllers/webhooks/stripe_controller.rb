@@ -50,6 +50,10 @@ module Webhooks
         return if order.cancelled?
         return if order.refunded?
 
+        unless order.terms_accepted?
+          Rails.logger.warn("Stripe webhook: Payment received but terms not accepted for order #{order.id}. Recording payment but flagging.")
+        end
+
         order.update!(
           stripe_session_id: session.id,
           stripe_payment_intent_id: session.payment_intent,

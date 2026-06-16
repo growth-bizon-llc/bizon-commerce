@@ -3,7 +3,7 @@ module Api
     module Admin
       class CustomersController < BaseController
         def index
-          customers = policy_scope(Customer).includes(:orders).order(created_at: :desc)
+          customers = policy_scope(Customer).includes(:orders).order(created_at: :desc, id: :desc)
           customers = customers.where("email ILIKE ?", "%#{ActiveRecord::Base.sanitize_sql_like(params[:q])}%") if params[:q].present?
 
           pagy, records = pagy(customers, limit: (params[:per_page] || 20).to_i.clamp(1, 100))

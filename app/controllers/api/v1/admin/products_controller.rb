@@ -5,7 +5,7 @@ module Api
         before_action :set_product, only: [:show, :update, :destroy]
 
         def index
-          products = policy_scope(Product).includes(:category, :variants, :product_images).ordered
+          products = policy_scope(Product).includes(:category, :variants, :product_images).ordered.order(:id)
           products = products.where(status: params[:status]) if params[:status].present?
           products = products.where(category_id: params[:category_id]) if params[:category_id].present?
           products = products.where("name ILIKE ?", "%#{ActiveRecord::Base.sanitize_sql_like(params[:q])}%") if params[:q].present?

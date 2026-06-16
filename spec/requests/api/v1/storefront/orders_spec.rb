@@ -45,7 +45,8 @@ RSpec.describe 'Api::V1::Storefront::Orders', type: :request do
            as: :json
 
       expect(response).to have_http_status(:created)
-      expect(json_response['customer']).to be_present
+      expect(json_response['order_number']).to be_present
+      expect(json_response['email']).to eq('buyer@test.com')
     end
 
     it 'handles invalid customer token gracefully' do
@@ -117,6 +118,48 @@ RSpec.describe 'Api::V1::Storefront::Orders', type: :request do
     it 'returns 404 for non-existent order' do
       get '/api/v1/storefront/orders/9999', headers: customer_headers, as: :json
       expect(response).to have_http_status(:not_found)
+    end
+
+    context 'with session_id (guest access)' do
+      let!(:guest_order) do
+        create(:order, store: store, order_number: '#2001',
+               customer: nil, stripe_session_id: 'cs_test_guest_123')
+      end
+
+      it 'returns order when session_id matches' do
+        get '/api/v1/storefront/orders/2001',
+            params: { session_id: 'cs_test_guest_123' },
+            headers: headers
+
+        expect(response).to have_http_status(:ok)
+        expect(json_response['order_number']).to eq('#2001')
+      end
+
+      it 'returns 404 when session_id does not match the order' do
+        get '/api/v1/storefront/orders/2001',
+            params: { session_id: 'cs_test_wrong_session' },
+            headers: headers
+
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it 'returns 401 without session_id or customer token' do
+        get '/api/v1/storefront/orders/2001',
+            headers: headers
+
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it 'prevents IDOR - session_id from a different order cannot access this order' do
+        create(:order, store: store, order_number: '#2002',
+               customer: nil, stripe_session_id: 'cs_test_other_456')
+
+        get '/api/v1/storefront/orders/2001',
+            params: { session_id: 'cs_test_other_456' },
+            headers: headers
+
+        expect(response).to have_http_status(:not_found)
+      end
     end
   end
 

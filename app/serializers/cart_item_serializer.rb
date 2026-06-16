@@ -11,6 +11,19 @@ class CartItemSerializer
     { amount: item.total / 100.0, currency: item.unit_price_currency }
   end
 
+  attribute :name do |item|
+    item.product.name
+  end
+
+  attribute :variant_name do |item|
+    item.product_variant&.name
+  end
+
+  attribute :image do |item|
+    primary_image = item.product.product_images.ordered.first
+    primary_image ? { url: primary_image.image_url } : nil
+  end
+
   attribute :product do |item|
     { id: item.product_id, name: item.product.name, slug: item.product.slug }
   end

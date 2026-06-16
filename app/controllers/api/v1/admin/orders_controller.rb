@@ -5,7 +5,7 @@ module Api
         before_action :set_order, only: [:show, :update]
 
         def index
-          orders = policy_scope(Order).includes(:customer, :order_items).order(created_at: :desc)
+          orders = policy_scope(Order).includes(:customer, :order_items).order(created_at: :desc, id: :desc)
           orders = orders.by_status(params[:status]) if params[:status].present?
 
           pagy, records = pagy(orders, limit: (params[:per_page] || 20).to_i.clamp(1, 100))

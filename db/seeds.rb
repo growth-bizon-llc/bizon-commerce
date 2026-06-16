@@ -161,15 +161,33 @@ store = Store.find_or_create_by!(slug: 'samdalth-gold') do |s|
   s.description = 'Joyería premium artesanal. Piezas exclusivas en oro, plata y gemas preciosas.'
   s.currency = 'USD'
   s.locale = 'es'
+  s.tax_rate = 19.0
   s.settings = {
     theme: 'luxury',
     logo_url: nil,
     primary_color: '#C9A84C',
     secondary_color: '#1A1A2E',
-    accent_color: '#E8D5B7'
+    accent_color: '#E8D5B7',
+    hero_title: 'Joyería que cuenta tu historia',
+    hero_subtitle: 'Piezas artesanales en oro, plata y gemas preciosas colombianas',
+    free_shipping_threshold_cents: 200_000,
+    shipping_cost_cents: 15_000,
+    contact_email: 'ventas@samdalthgold.com',
+    contact_phone: '+57 601 555 0123',
+    contact_whatsapp: '+57 310 555 0123',
+    social: {
+      instagram: 'samdalthgold',
+      facebook: 'samdalthgold',
+      tiktok: 'samdalthgold'
+    },
+    footer_text: '© 2026 Samdalth Gold. Todos los derechos reservados.',
+    announcement_bar: 'Envío gratis en compras superiores a $2,000 USD',
+    collection_names: ['Nuevos Lanzamientos', 'Esmeraldas Colombianas', 'Clásicos Eternos']
   }
 end
-puts "  Store: #{store.name} (#{store.slug})"
+# Always update tax_rate (find_or_create_by only sets on create, not on find)
+store.update!(tax_rate: 19.0) if store.tax_rate.zero?
+puts "  Store: #{store.name} (#{store.slug}) - tax_rate: #{store.tax_rate}%"
 
 Current.store = store
 
@@ -1314,7 +1332,7 @@ products_data.each_with_index do |pd, i|
           name: "#{mat[:name]} / Talla #{size}",
           store: store
         ) do |v|
-          v.sku = "#{pd[:sku]}-#{mat[:name][0..2].upcase}#{size}"
+          v.sku = "#{pd[:sku]}-#{mat[:name].gsub(/\s+/, '')[0..5].upcase}#{size}"
           v.price_cents = adjusted_price
           v.price_currency = 'USD'
           v.track_inventory = true
@@ -1330,7 +1348,7 @@ products_data.each_with_index do |pd, i|
         name: mat[:name],
         store: store
       ) do |v|
-        v.sku = "#{pd[:sku]}-#{mat[:name][0..2].upcase}"
+        v.sku = "#{pd[:sku]}-#{mat[:name].gsub(/\s+/, '')[0..5].upcase}"
         v.price_cents = adjusted_price
         v.price_currency = 'USD'
         v.track_inventory = true
@@ -1355,22 +1373,28 @@ puts "  Downloading product images from Unsplash..."
 image_success = 0
 image_fail = 0
 
+# Track used image indices per category to minimize repeats
+used_indices = Hash.new { |h, k| h[k] = 0 }
+
 products.each_with_index do |product, idx|
   next if product.product_images.any? # Skip if already has images
 
   cat_type = image_category_for(product.category&.name || '')
   urls = JEWELRY_IMAGES[cat_type] || JEWELRY_IMAGES[:necklaces]
 
-  # Give each product 1-2 images from its category pool
-  image_count = [2, 3].sample
+  # Each product gets 1 unique image (avoids repeats in the storefront grid)
+  # Featured products get 2 images for the detail gallery
+  image_count = product.featured? ? 2 : 1
   image_count.times do |img_idx|
-    url = urls[(idx + img_idx) % urls.size]
+    url_idx = (used_indices[cat_type] + img_idx) % urls.size
+    url = urls[url_idx]
     if attach_image_to_product(product, store, url, position: img_idx)
       image_success += 1
     else
       image_fail += 1
     end
   end
+  used_indices[cat_type] += image_count
 
   # Progress indicator
   print "\r    #{idx + 1}/#{products.count} products processed (#{image_success} images attached)"
@@ -1382,26 +1406,39 @@ puts "  Images: #{image_success} attached, #{image_fail} failed"
 # CUSTOMERS (20)
 # =============================================================================
 customers_data = [
-  { first: 'María', last: 'González', email: 'maria.gonzalez@gmail.com', phone: '+57 310 234 5678', marketing: true },
-  { first: 'Carlos', last: 'Rodríguez', email: 'carlos.rodriguez@hotmail.com', phone: '+57 315 876 5432', marketing: true },
-  { first: 'Valentina', last: 'López', email: 'vale.lopez@gmail.com', phone: '+57 300 123 4567', marketing: true },
-  { first: 'Andrés', last: 'Martínez', email: 'andres.mtz@outlook.com', phone: '+57 312 345 6789', marketing: false },
-  { first: 'Camila', last: 'Hernández', email: 'camila.hdz@gmail.com', phone: '+57 318 765 4321', marketing: true },
-  { first: 'Santiago', last: 'García', email: 'santi.garcia@yahoo.com', phone: '+57 305 432 1098', marketing: false },
-  { first: 'Isabella', last: 'Ramírez', email: 'isa.ramirez@gmail.com', phone: '+57 311 987 6543', marketing: true },
-  { first: 'Sebastián', last: 'Torres', email: 'seb.torres@outlook.com', phone: '+57 320 654 3210', marketing: true },
-  { first: 'Luciana', last: 'Morales', email: 'luciana.morales@gmail.com', phone: '+57 316 210 9876', marketing: false },
-  { first: 'Daniel', last: 'Vargas', email: 'daniel.vargas@hotmail.com', phone: '+57 301 567 8901', marketing: true },
-  { first: 'Sofía', last: 'Castro', email: 'sofia.castro@gmail.com', phone: '+57 314 890 1234', marketing: true },
-  { first: 'Alejandro', last: 'Mendoza', email: 'ale.mendoza@gmail.com', phone: '+57 319 012 3456', marketing: false },
-  { first: 'Gabriela', last: 'Reyes', email: 'gabi.reyes@outlook.com', phone: '+57 302 345 6780', marketing: true },
-  { first: 'Mateo', last: 'Díaz', email: 'mateo.diaz@gmail.com', phone: '+57 313 678 9012', marketing: true },
-  { first: 'Mariana', last: 'Gutiérrez', email: 'mariana.gtz@yahoo.com', phone: '+57 317 901 2345', marketing: false },
-  { first: 'Nicolás', last: 'Peña', email: 'nico.pena@gmail.com', phone: '+57 304 234 5670', marketing: true },
-  { first: 'Paula', last: 'Sánchez', email: 'paula.sanchez@hotmail.com', phone: '+57 310 567 8903', marketing: true },
-  { first: 'Julián', last: 'Ortiz', email: 'julian.ortiz@gmail.com', phone: '+57 321 890 1236', marketing: false },
-  { first: 'Laura', last: 'Jiménez', email: 'laura.jimenez@outlook.com', phone: '+57 308 123 4569', marketing: true },
-  { first: 'Felipe', last: 'Rojas', email: 'felipe.rojas@gmail.com', phone: '+57 315 456 7892', marketing: true }
+  # VIP customers (will get multiple orders)
+  { first: 'María Alejandra', last: 'González de Uribe', email: 'maria.gonzalez@gmail.com', phone: '+57 310 234 5678', marketing: true },
+  { first: 'Carlos Andrés', last: 'Rodríguez Mejía', email: 'carlos.rodriguez@hotmail.com', phone: '+57 315 876 5432', marketing: true },
+  { first: 'Valentina', last: 'López Castaño', email: 'vale.lopez@gmail.com', phone: '+57 300 123 4567', marketing: true },
+  { first: 'Isabella', last: 'Ramírez Ochoa', email: 'isa.ramirez@gmail.com', phone: '+57 311 987 6543', marketing: true },
+  { first: 'Sofía', last: 'Castro Arango', email: 'sofia.castro@gmail.com', phone: '+57 314 890 1234', marketing: true },
+  # Regular customers
+  { first: 'Andrés Felipe', last: 'Martínez Ríos', email: 'andres.mtz@outlook.com', phone: '+57 312 345 6789', marketing: false },
+  { first: 'Camila', last: 'Hernández Vélez', email: 'camila.hdz@gmail.com', phone: '+57 318 765 4321', marketing: true },
+  { first: 'Santiago', last: 'García Londoño', email: 'santi.garcia@yahoo.com', phone: '+57 305 432 1098', marketing: false },
+  { first: 'Sebastián', last: 'Torres Restrepo', email: 'seb.torres@outlook.com', phone: '+57 320 654 3210', marketing: true },
+  { first: 'Luciana', last: 'Morales Duque', email: 'luciana.morales@gmail.com', phone: '+57 316 210 9876', marketing: false },
+  { first: 'Daniel', last: 'Vargas Ospina', email: 'daniel.vargas@hotmail.com', phone: '+57 301 567 8901', marketing: true },
+  { first: 'Alejandro', last: 'Mendoza Cárdenas', email: 'ale.mendoza@gmail.com', phone: '+57 319 012 3456', marketing: false },
+  { first: 'Gabriela', last: 'Reyes Salazar', email: 'gabi.reyes@outlook.com', phone: '+57 302 345 6780', marketing: true },
+  { first: 'Mateo', last: 'Díaz Echavarría', email: 'mateo.diaz@gmail.com', phone: '+57 313 678 9012', marketing: true },
+  { first: 'Mariana', last: 'Gutiérrez Botero', email: 'mariana.gtz@yahoo.com', phone: '+57 317 901 2345', marketing: false },
+  { first: 'Nicolás', last: 'Peña Jaramillo', email: 'nico.pena@gmail.com', phone: '+57 304 234 5670', marketing: true },
+  { first: 'Paula Andrea', last: 'Sánchez Muñoz', email: 'paula.sanchez@hotmail.com', phone: '+57 310 567 8903', marketing: true },
+  { first: 'Julián', last: 'Ortiz Bedoya', email: 'julian.ortiz@gmail.com', phone: '+57 321 890 1236', marketing: false },
+  { first: 'Laura Cristina', last: 'Jiménez Gómez', email: 'laura.jimenez@outlook.com', phone: '+57 308 123 4569', marketing: true },
+  { first: 'Felipe', last: 'Rojas Toro', email: 'felipe.rojas@gmail.com', phone: '+57 315 456 7892', marketing: true },
+  # Additional customers
+  { first: 'Ana María', last: 'Correa Montoya', email: 'anamaria.correa@gmail.com', phone: '+57 300 876 2134', marketing: true },
+  { first: 'Diego', last: 'Zapata Hoyos', email: 'diego.zapata@outlook.com', phone: '+57 322 109 8765', marketing: false },
+  { first: 'Natalia', last: 'Aristizábal Vélez', email: 'nata.aristizabal@gmail.com', phone: '+57 311 543 2109', marketing: true },
+  { first: 'Juan Pablo', last: 'Cardona Sierra', email: 'jp.cardona@hotmail.com', phone: '+57 318 210 5678', marketing: true },
+  { first: 'Catalina', last: 'Álvarez Rendón', email: 'cata.alvarez@gmail.com', phone: '+57 305 678 1234', marketing: true },
+  { first: 'Ricardo', last: 'Escobar Isaza', email: 'ricardo.escobar@yahoo.com', phone: '+57 301 345 9087', marketing: false },
+  { first: 'Daniela', last: 'Ossa Ramírez', email: 'daniela.ossa@gmail.com', phone: '+57 316 098 7654', marketing: true },
+  { first: 'Esteban', last: 'Uribe Calle', email: 'esteban.uribe@outlook.com', phone: '+57 320 432 1567', marketing: false },
+  { first: 'Manuela', last: 'Posada Londoño', email: 'manu.posada@gmail.com', phone: '+57 314 765 4320', marketing: true },
+  { first: 'Tomás', last: 'Betancur Henao', email: 'tomas.betancur@gmail.com', phone: '+57 312 890 3456', marketing: true }
 ]
 
 customers = customers_data.map do |cd|
@@ -1423,47 +1460,56 @@ puts "  Creating orders..."
 
 # Colombian cities for shipping addresses
 colombian_addresses = [
-  { city: 'Bogotá', state: 'DC', zip: '110111' },
-  { city: 'Medellín', state: 'ANT', zip: '050001' },
-  { city: 'Cali', state: 'VAC', zip: '760001' },
-  { city: 'Barranquilla', state: 'ATL', zip: '080001' },
-  { city: 'Cartagena', state: 'BOL', zip: '130001' },
-  { city: 'Bucaramanga', state: 'SAN', zip: '680001' },
-  { city: 'Pereira', state: 'RIS', zip: '660001' },
-  { city: 'Santa Marta', state: 'MAG', zip: '470001' },
-  { city: 'Manizales', state: 'CAL', zip: '170001' },
-  { city: 'Ibagué', state: 'TOL', zip: '730001' }
+  { city: 'Bogotá', state: 'DC', zip: '110111', barrio: 'Chapinero' },
+  { city: 'Bogotá', state: 'DC', zip: '110221', barrio: 'Usaquén' },
+  { city: 'Bogotá', state: 'DC', zip: '110311', barrio: 'Rosales' },
+  { city: 'Medellín', state: 'ANT', zip: '050021', barrio: 'El Poblado' },
+  { city: 'Medellín', state: 'ANT', zip: '050034', barrio: 'Laureles' },
+  { city: 'Medellín', state: 'ANT', zip: '050010', barrio: 'Envigado' },
+  { city: 'Cali', state: 'VAC', zip: '760042', barrio: 'Ciudad Jardín' },
+  { city: 'Cali', state: 'VAC', zip: '760001', barrio: 'Granada' },
+  { city: 'Barranquilla', state: 'ATL', zip: '080020', barrio: 'Alto Prado' },
+  { city: 'Cartagena', state: 'BOL', zip: '130001', barrio: 'Bocagrande' },
+  { city: 'Bucaramanga', state: 'SAN', zip: '680003', barrio: 'Cabecera' },
+  { city: 'Pereira', state: 'RIS', zip: '660003', barrio: 'Pinares' },
+  { city: 'Santa Marta', state: 'MAG', zip: '470004', barrio: 'El Rodadero' },
+  { city: 'Manizales', state: 'CAL', zip: '170002', barrio: 'Palermo' },
+  { city: 'Armenia', state: 'QUI', zip: '630004', barrio: 'Norte' }
 ]
 
 colombian_streets = [
-  'Calle 85 #15-40', 'Carrera 7 #72-13', 'Calle 100 #8A-55', 'Carrera 43A #1-50',
-  'Calle 10 #4-40', 'Avenida El Poblado #1A-120', 'Calle 53 #46-192', 'Carrera 15 #93-47',
-  'Calle 72 #10-07', 'Avenida 19 #104-37', 'Carrera 11 #82-01', 'Calle 93 #13-45',
-  'Carrera 50 #52-345', 'Calle 34 #65-12', 'Avenida Circunvalar #20-15'
+  'Calle 85 #15-40 Apto 801', 'Carrera 7 #72-13 Of. 302', 'Calle 100 #8A-55 Piso 6',
+  'Carrera 43A #1-50 Sur Torre 2', 'Calle 10 #4-40 Local 101', 'Avenida El Poblado #1A-120',
+  'Calle 53 #46-192 Apto 1204', 'Carrera 15 #93-47', 'Calle 72 #10-07 Apto 504',
+  'Avenida 19 #104-37 Casa 15', 'Carrera 11 #82-01 Apto 302', 'Calle 93 #13-45 Piso 4',
+  'Carrera 50 #52-345', 'Calle 34 #65-12 Casa 8', 'Avenida Circunvalar #20-15 Apto 1701',
+  'Transversal 6 #27-85 Conjunto Res. Los Pinos', 'Diagonal 75B #4-12',
+  'Calle 140 #11-58 Torre A Apto 903', 'Carrera 19A #82-85 Edificio Oasis',
+  'Calle 5 #39-90 Condominio El Peñón Casa 22'
 ]
 
-# Monthly distribution (more orders in Dec/Feb/May for holidays)
+# Monthly distribution (more orders in Dec/Feb/May for holidays - ~150 orders total)
 monthly_weights = {
-  1 => 8,   # Enero
-  2 => 12,  # Febrero (San Valentín)
-  3 => 7,   # Marzo (Día de la Mujer)
-  4 => 6,   # Abril
-  5 => 11,  # Mayo (Día de la Madre)
-  6 => 7,   # Junio
-  7 => 6,   # Julio
-  8 => 5,   # Agosto
-  9 => 8,   # Septiembre (Amor y Amistad)
-  10 => 7,  # Octubre
-  11 => 8,  # Noviembre
-  12 => 15  # Diciembre (Navidad)
+  1 => 10,  # Enero
+  2 => 16,  # Febrero (San Valentín)
+  3 => 9,   # Marzo (Día de la Mujer)
+  4 => 8,   # Abril
+  5 => 15,  # Mayo (Día de la Madre)
+  6 => 10,  # Junio
+  7 => 8,   # Julio
+  8 => 7,   # Agosto
+  9 => 12,  # Septiembre (Amor y Amistad)
+  10 => 9,  # Octubre
+  11 => 11, # Noviembre (Black Friday)
+  12 => 20  # Diciembre (Navidad)
 }
 
 # Status distribution for completed orders
 status_distribution = [
-  :delivered, :delivered, :delivered, :delivered, :delivered,  # 50% delivered
-  :shipped, :shipped,                                          # 20% shipped
-  :paid, :paid,                                                # 20% paid/processing
-  :cancelled                                                   # 10% cancelled
+  :delivered, :delivered, :delivered, :delivered, :delivered, :delivered,  # 60% delivered
+  :shipped, :shipped,                                                      # 20% shipped
+  :paid,                                                                   # 10% paid/processing
+  :cancelled                                                               # 10% cancelled
 ]
 
 order_count = 0
@@ -1474,7 +1520,10 @@ monthly_weights.each do |month, weight|
   year = month <= Time.current.month ? Time.current.year : Time.current.year - 1
 
   weight.times do
-    customer = customers.sample
+    # VIP customers (first 5) are 3x more likely to order
+    vip_customers = customers[0..4]
+    regular_customers = customers[5..]
+    customer = rand < 0.4 ? vip_customers.sample : regular_customers.sample
     addr = colombian_addresses.sample
     order_products = active_products.sample(rand(1..4))
     target_status = status_distribution.sample
@@ -1501,30 +1550,44 @@ monthly_weights.each do |month, weight|
     tax = (subtotal * 0.19).to_i # Colombian IVA 19%
     shipping = subtotal >= 200_000 ? 0 : 15_000 # Free shipping over $200
 
-    # Determine timestamps based on target status
+    # Determine timestamps, payment_status, and Stripe IDs based on target status
     paid_at = nil
     shipped_at = nil
     delivered_at = nil
     cancelled_at = nil
+    payment_status = 'pending'
+    stripe_session_id = nil
+    stripe_payment_intent_id = nil
 
     case target_status
     when :confirmed
       # Just confirmed, no payment yet
     when :paid
       paid_at = placed_date + rand(1..3).hours
+      payment_status = 'paid'
+      stripe_session_id = "cs_live_#{SecureRandom.alphanumeric(24)}"
+      stripe_payment_intent_id = "pi_#{SecureRandom.alphanumeric(24)}"
     when :shipped
       paid_at = placed_date + rand(1..3).hours
       shipped_at = placed_date + rand(1..4).days
+      payment_status = 'paid'
+      stripe_session_id = "cs_live_#{SecureRandom.alphanumeric(24)}"
+      stripe_payment_intent_id = "pi_#{SecureRandom.alphanumeric(24)}"
     when :delivered
       paid_at = placed_date + rand(1..3).hours
       shipped_at = placed_date + rand(1..4).days
       delivered_at = shipped_at + rand(2..7).days
+      payment_status = 'paid'
+      stripe_session_id = "cs_live_#{SecureRandom.alphanumeric(24)}"
+      stripe_payment_intent_id = "pi_#{SecureRandom.alphanumeric(24)}"
     when :cancelled
       cancelled_at = placed_date + rand(1..48).hours
+      payment_status = rand < 0.3 ? 'refunded' : 'pending'
     end
 
     shipping_addr = {
       line1: colombian_streets.sample,
+      line2: addr[:barrio],
       city: addr[:city],
       state: addr[:state],
       zip: addr[:zip],
@@ -1536,12 +1599,24 @@ monthly_weights.each do |month, weight|
       customer: customer,
       email: customer.email,
       status: target_status.to_s,
+      payment_status: payment_status,
       subtotal_cents: subtotal,
       tax_cents: tax,
       total_cents: subtotal + tax + shipping,
       shipping_address: shipping_addr,
       billing_address: shipping_addr, # Same as shipping for simplicity
-      notes: [nil, nil, nil, 'Envolver para regalo', 'Entregar en portería', 'Llamar antes de entregar', 'Es un regalo de aniversario'].sample,
+      stripe_session_id: stripe_session_id,
+      stripe_payment_intent_id: stripe_payment_intent_id,
+      notes: [nil, nil, nil, nil,
+        'Envolver para regalo por favor',
+        'Entregar en portería, apto 501',
+        'Llamar antes de entregar al celular',
+        'Es un regalo de aniversario, envolver especial',
+        'Incluir tarjeta: "Feliz cumpleaños amor"',
+        'Necesito factura a nombre de empresa',
+        'Entregar solo al titular, requiere cédula',
+        'Segunda compra, misma dirección que la anterior'
+      ].sample,
       placed_at: placed_date,
       paid_at: paid_at,
       shipped_at: shipped_at,

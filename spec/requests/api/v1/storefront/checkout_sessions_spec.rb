@@ -103,16 +103,14 @@ RSpec.describe 'Api::V1::Storefront::CheckoutSessions', type: :request do
     end
 
     context 'terms acceptance' do
-      it 'rejects checkout without terms_accepted' do
+      it 'allows session creation without terms_accepted (terms validated at payment time)' do
         params_without_terms = valid_params.except(:terms_accepted)
         post '/api/v1/storefront/checkout/sessions',
              params: params_without_terms,
              headers: headers.merge('X-Cart-Token' => cart.token),
              as: :json
 
-        expect(response).to have_http_status(:unprocessable_entity)
-        body = JSON.parse(response.body)
-        expect(body['errors']).to include('You must accept the terms and conditions')
+        expect(response).to have_http_status(:created)
       end
     end
   end

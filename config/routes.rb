@@ -38,7 +38,9 @@ Rails.application.routes.draw do
 
         resource :store, only: [:show]
 
-        resources :orders, only: [:create, :show], param: :order_number
+        resources :orders, only: [:create, :show], param: :order_number do
+          patch :accept_terms, on: :member
+        end
         resource :session, only: [:create]
         resources :customers, only: [:create, :show, :destroy] do
           get :export_data, on: :member

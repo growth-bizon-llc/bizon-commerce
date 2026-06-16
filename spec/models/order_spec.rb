@@ -129,6 +129,44 @@ RSpec.describe Order, type: :model do
     end
   end
 
+  describe '#paid?' do
+    it 'returns true when payment_status is paid' do
+      order = build(:order, store: store, payment_status: 'paid')
+      expect(order.paid?).to be true
+    end
+
+    it 'returns false when payment_status is pending' do
+      order = build(:order, store: store, payment_status: 'pending')
+      expect(order.paid?).to be false
+    end
+
+    it 'returns false when payment_status is failed' do
+      order = build(:order, store: store, payment_status: 'failed')
+      expect(order.paid?).to be false
+    end
+
+    it 'returns false when payment_status is refunded' do
+      order = build(:order, store: store, payment_status: 'refunded')
+      expect(order.paid?).to be false
+    end
+  end
+
+  describe 'payment_status validation' do
+    it 'allows valid payment statuses' do
+      %w[pending paid failed refunded].each do |status|
+        order = build(:order, store: store, payment_status: status)
+        order.valid?
+        expect(order.errors[:payment_status]).to be_empty
+      end
+    end
+
+    it 'rejects invalid payment_status' do
+      order = build(:order, store: store, payment_status: 'unknown')
+      expect(order).not_to be_valid
+      expect(order.errors[:payment_status]).to be_present
+    end
+  end
+
   describe 'scopes' do
     let!(:pending_order) { create(:order, store: store) }
     let!(:paid_order) { create(:order, :paid, store: store) }
