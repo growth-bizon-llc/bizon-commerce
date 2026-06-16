@@ -6,10 +6,6 @@ module Api
           response.set_header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
           response.set_header('Pragma', 'no-cache')
 
-          unless ActiveModel::Type::Boolean.new.cast(params[:terms_accepted])
-            return render json: { errors: ["You must accept the terms and conditions"] }, status: :unprocessable_entity
-          end
-
           token = request.headers["X-Cart-Token"] || params[:cart_token]
 
           Cart.transaction do
@@ -59,7 +55,8 @@ module Api
           render json: {
             status: checkout_session.status,
             payment_status: checkout_session.payment_status,
-            customer_email: checkout_session.customer_details&.email
+            customer_email: checkout_session.customer_details&.email,
+            order_number: order.order_number&.delete_prefix('#')
           }
         rescue ActiveRecord::RecordNotFound
           render json: { error: "Session not found" }, status: :not_found
@@ -90,11 +87,14 @@ module Api
         end
 
         def safe_return_url
-          default_url = "#{request.base_url}/checkout/complete?session_id={CHECKOUT_SESSION_ID}"
+          # Use the Origin header to redirect back to the storefront (not the API server)
+          origin = request.headers["Origin"] || request.base_url
+          default_url = "#{origin}/checkout/complete?session_id={CHECKOUT_SESSION_ID}"
           return default_url unless params[:return_url].present?
 
           uri = URI.parse(params[:return_url])
-          return default_url unless uri.host == request.host || uri.host.nil?
+          origin_host = URI.parse(origin).host rescue request.host
+          return default_url unless uri.host == origin_host || uri.host.nil?
 
           params[:return_url]
         rescue URI::InvalidURIError
