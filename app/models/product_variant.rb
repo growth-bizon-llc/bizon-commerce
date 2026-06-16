@@ -1,11 +1,14 @@
 class ProductVariant < ApplicationRecord
   include Multi::Scoped
   include Discard::Model
+  include Sanitizable
 
   monetize :price_cents
   monetize :compare_at_price_cents, allow_nil: true
 
   belongs_to :product
+
+  sanitize_fields :name
 
   validates :name, presence: true, length: { maximum: 255 }
   validates :sku, uniqueness: { scope: :store_id }, allow_blank: true

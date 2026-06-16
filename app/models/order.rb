@@ -13,7 +13,7 @@ class Order < ApplicationRecord
   validates :order_number, presence: true, uniqueness: true
   validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :subtotal_cents, :tax_cents, :total_cents, numericality: { greater_than_or_equal_to: 0 }
-  validates :refund_amount_cents, numericality: { greater_than_or_equal_to: 0 }
+  validates :refund_amount_cents, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
   validates :payment_status, inclusion: { in: %w[pending paid failed refunded] }
 
   before_validation :generate_order_number, on: :create
@@ -61,6 +61,9 @@ class Order < ApplicationRecord
       before do
         self.cancelled_at = Time.current
       end
+      after do
+        restore_inventory!
+      end
       transitions from: [:pending, :confirmed], to: :cancelled
     end
 
@@ -68,17 +71,38 @@ class Order < ApplicationRecord
       before do
         self.refunded_at = Time.current
       end
+      after do
+        restore_inventory!
+      end
       transitions from: :paid, to: :refunded
     end
   end
 
   scope :by_status, ->(status) { where(status: status) }
 
-  def paid?
+  def payment_paid?
     payment_status == 'paid'
   end
 
   private
+
+  def restore_inventory!
+    order_items.includes(:product, :product_variant).each do |item|
+      variant = item.product_variant
+      product = item.product
+      next unless product
+
+      if variant && !variant.discarded? && variant.track_inventory
+        variant.with_lock do
+          variant.update!(quantity: variant.quantity + item.quantity)
+        end
+      elsif !variant && !product.discarded? && product.track_inventory
+        product.with_lock do
+          product.update!(quantity: product.quantity + item.quantity)
+        end
+      end
+    end
+  end
 
   def generate_order_number
     return if order_number.present?

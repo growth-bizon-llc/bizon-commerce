@@ -9,8 +9,12 @@ module Api
 
         def update
           authorize Current.store
-          Current.store.update!(store_params)
-          render json: StoreSerializer.new(Current.store).to_h
+          merged = store_params
+          if merged[:settings].present?
+            merged[:settings] = (Current.store.settings || {}).deep_merge(merged[:settings])
+          end
+          Current.store.update!(merged)
+          render json: StoreSerializer.new(Current.store.reload).to_h
         end
 
         private

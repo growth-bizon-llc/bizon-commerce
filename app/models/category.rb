@@ -1,6 +1,7 @@
 class Category < ApplicationRecord
   include Multi::Scoped
   include Discard::Model
+  include Sanitizable
 
   extend FriendlyId
   friendly_id :name, use: [:slugged, :scoped], scope: :store
@@ -10,6 +11,8 @@ class Category < ApplicationRecord
   belongs_to :parent, class_name: 'Category', optional: true
   has_many :children, class_name: 'Category', foreign_key: :parent_id, dependent: :nullify
   has_many :products, dependent: :nullify
+
+  sanitize_fields :name, :description
 
   validates :name, presence: true, length: { maximum: 255 }
   validates :slug, uniqueness: { scope: :store_id }

@@ -87,18 +87,19 @@ module Api
         end
 
         def safe_return_url
-          # Use the Origin header to redirect back to the storefront (not the API server)
+          # Prefer explicit return_url from the storefront (server-to-server call)
+          if params[:return_url].present?
+            uri = URI.parse(params[:return_url])
+            allowed = (ENV["CORS_ORIGINS"] || "").split(",").map { |o| URI.parse(o.strip).host rescue nil }.compact
+            return params[:return_url] if uri.host.nil? || allowed.include?(uri.host)
+          end
+
+          # Fallback: use Origin header or base_url
           origin = request.headers["Origin"] || request.base_url
-          default_url = "#{origin}/checkout/complete?session_id={CHECKOUT_SESSION_ID}"
-          return default_url unless params[:return_url].present?
-
-          uri = URI.parse(params[:return_url])
-          origin_host = URI.parse(origin).host rescue request.host
-          return default_url unless uri.host == origin_host || uri.host.nil?
-
-          params[:return_url]
+          "#{origin}/checkout/complete?session_id={CHECKOUT_SESSION_ID}"
         rescue URI::InvalidURIError
-          default_url
+          origin = request.headers["Origin"] || request.base_url
+          "#{origin}/checkout/complete?session_id={CHECKOUT_SESSION_ID}"
         end
 
         def create_stripe_session(order)

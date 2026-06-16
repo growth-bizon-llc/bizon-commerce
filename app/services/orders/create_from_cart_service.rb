@@ -17,6 +17,7 @@ module Orders
       ActiveRecord::Base.transaction do
         @result = create_order
         create_order_items
+        decrement_inventory!
         update_cart_status
       end
 
@@ -70,12 +71,20 @@ module Orders
     def validate_stock!
       @cart.cart_items.includes(:product, :product_variant).each do |cart_item|
         variant = cart_item.product_variant
-        next unless variant
-        next unless variant.respond_to?(:track_inventory) && variant.track_inventory
+        product = cart_item.product
 
-        if variant.quantity < cart_item.quantity
-          @errors << "Insufficient stock for #{cart_item.product.name}. Only #{variant.quantity} available."
-          next
+        if variant
+          next unless variant.track_inventory
+
+          if variant.quantity < cart_item.quantity
+            @errors << "Insufficient stock for #{product.name}. Only #{variant.quantity} available."
+          end
+        else
+          next unless product.track_inventory
+
+          if product.quantity < cart_item.quantity
+            @errors << "Insufficient stock for #{product.name}. Only #{product.quantity} available."
+          end
         end
       end
     end
@@ -130,6 +139,25 @@ module Orders
           total_cents: item_total,
           total_currency: cart_item.unit_price_currency
         )
+      end
+    end
+
+    def decrement_inventory!
+      @cart.cart_items.includes(:product, :product_variant).each do |cart_item|
+        variant = cart_item.product_variant
+        product = cart_item.product
+
+        if variant && variant.track_inventory
+          variant.lock!
+          raise ActiveRecord::RecordInvalid, variant unless variant.quantity >= cart_item.quantity
+
+          variant.update!(quantity: variant.quantity - cart_item.quantity)
+        elsif !variant && product.track_inventory
+          product.lock!
+          raise ActiveRecord::RecordInvalid, product unless product.quantity >= cart_item.quantity
+
+          product.update!(quantity: product.quantity - cart_item.quantity)
+        end
       end
     end
 

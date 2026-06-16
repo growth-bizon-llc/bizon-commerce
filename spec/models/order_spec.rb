@@ -129,25 +129,25 @@ RSpec.describe Order, type: :model do
     end
   end
 
-  describe '#paid?' do
+  describe '#payment_paid?' do
     it 'returns true when payment_status is paid' do
       order = build(:order, store: store, payment_status: 'paid')
-      expect(order.paid?).to be true
+      expect(order.payment_paid?).to be true
     end
 
     it 'returns false when payment_status is pending' do
       order = build(:order, store: store, payment_status: 'pending')
-      expect(order.paid?).to be false
+      expect(order.payment_paid?).to be false
     end
 
     it 'returns false when payment_status is failed' do
       order = build(:order, store: store, payment_status: 'failed')
-      expect(order.paid?).to be false
+      expect(order.payment_paid?).to be false
     end
 
     it 'returns false when payment_status is refunded' do
       order = build(:order, store: store, payment_status: 'refunded')
-      expect(order.paid?).to be false
+      expect(order.payment_paid?).to be false
     end
   end
 

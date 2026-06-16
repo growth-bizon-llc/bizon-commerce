@@ -1,6 +1,7 @@
 class Product < ApplicationRecord
   include Multi::Scoped
   include Discard::Model
+  include Sanitizable
 
   extend FriendlyId
   friendly_id :name, use: [:slugged, :scoped], scope: :store
@@ -12,6 +13,8 @@ class Product < ApplicationRecord
   has_many :variants, class_name: 'ProductVariant', dependent: :destroy
   has_many :product_images, dependent: :destroy
   has_many :line_items, class_name: 'OrderItem', dependent: :restrict_with_error
+
+  sanitize_fields :name, :description, :short_description
 
   validates :name, presence: true, length: { maximum: 255 }
   validates :base_price_cents, numericality: { greater_than_or_equal_to: 0 }
