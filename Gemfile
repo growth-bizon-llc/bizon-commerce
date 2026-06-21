@@ -60,7 +60,7 @@ gem "discard"
 gem "stripe"
 
 # Password hashing for customers
-gem "bcrypt", "~> 3.1.7"
+gem "bcrypt", "~> 3.1.22"
 
 group :development, :test do
   gem "dotenv-rails"
